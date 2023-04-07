@@ -1,0 +1,98 @@
+package com.jslhrd.controller;
+
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.jslhrd.domain.bymemberlistDTO;
+import com.jslhrd.domain.custnolistDTO;
+import com.jslhrd.domain.memberDTO;
+import com.jslhrd.domain.moneyDTO;
+import com.jslhrd.service.ShopService;
+
+import lombok.AllArgsConstructor;
+
+@Controller
+@AllArgsConstructor
+@RequestMapping("Shop")
+public class ShopController {
+	private static final Logger log = LoggerFactory.getLogger(ShopController.class);
+	
+	@GetMapping("index")
+	public void mainIndex() {
+		log.info("index.jsp call........");
+	}
+
+	private ShopService service;
+	@GetMapping("insert")
+	public void goInsert(Model model) {
+		log.info("insert.jsp call........");
+		int count = service.insertcustno();
+		count  = count + 100001; 
+		model.addAttribute("custno" , count);
+		
+	}
+	
+	@PostMapping("insert")
+	public String InsertPro(memberDTO dto, RedirectAttributes rtts) {
+		log.info("insertPro.jsp call........");
+		int row = service.memberinsert(dto);
+		rtts.addFlashAttribute("row", row);
+		return "redirect:insert_pro";
+	}
+	
+	@GetMapping("insert_pro")
+	public void InsertProPK() {
+		log.info("insertProPk.jsp call........");
+	}
+	
+	@GetMapping("member_list")
+	public void MemberList(Model model) {
+		log.info("MemberList.jsp call........");
+		List<memberDTO> list = service.memberlist();
+		model.addAttribute("list" , list);
+	}
+	
+	@GetMapping("money_insert")
+	public void goMoneyInsert(Model model) {
+		log.info("money_insert.jsp call........");
+		int count = service.moneysaleno();
+		count  = count + 1; 
+		model.addAttribute("saleno" , count);
+		
+	}
+	
+	@PostMapping("money_insert")
+	public String MoneyInsertPro(moneyDTO dto, RedirectAttributes rtts) {
+		int row = service.moneyinsert(dto);
+		rtts.addFlashAttribute("row", row);
+		log.info("money_insert_pro.jsp call........");
+		return "redirect:money_insert_pro";
+	}
+	
+	@GetMapping("money_insert_pro")
+	public void MoneyInsertProOK() {
+		log.info("money_insert_proOk.jsp call........");
+	}
+	
+	@GetMapping("money_list")
+	public void MoneyList(Model model) {
+		log.info("MemberList.jsp call........");
+		List<custnolistDTO> list = service.custnolist();
+		model.addAttribute("list", list);
+	}
+	
+	@GetMapping("by_member_list")
+	public void ByMemberList(Model model) {
+		log.info("by_member_list.jsp call........");
+		List<bymemberlistDTO> list = service.bymemberlist();
+		model.addAttribute("list", list);
+	}
+}

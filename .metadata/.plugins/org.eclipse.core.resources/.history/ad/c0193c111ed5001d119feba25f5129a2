@@ -1,0 +1,9 @@
+package com.DevFox.JUS.service;
+
+public interface JUSService {
+	//user 全体照会
+	public int User_Count();
+	
+	//user 突き合せ
+	public int User_Chk(String user_id);
+}

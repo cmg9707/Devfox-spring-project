@@ -1,0 +1,31 @@
+package com.DevFox.JUS.service;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.DevFox.JUS.mapper.JUSMapper;
+
+import lombok.AllArgsConstructor;
+
+@Service
+@AllArgsConstructor
+public class JUSServiceimpl implements JUSService {
+	
+	private static final Logger log=
+			LoggerFactory.getLogger(JUSServiceimpl.class);
+	
+	@Autowired
+	private JUSMapper mapper; //mapper 依存性
+	
+	@Override
+		public int User_Count() {
+			return mapper.User_Count();
+		}
+	
+	@Override
+	public int User_Chk(String user_id) {
+		return mapper.User_Chk(user_id);
+	}
+}

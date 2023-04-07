@@ -1,0 +1,20 @@
+package com.DevFox.JUS.domain;
+
+import lombok.Data;
+
+@Data
+public class BoardDTO {
+	private int board_idx; //文順序
+	private String user_name;
+	private String board_title;
+	private String board_content;
+	private String board_poto;
+	private String board_address;
+	private String board_period_start;
+	private String board_period_end;
+	private String board_end;
+	private int limit;
+	private String board_date;
+	private int board_recommend;
+	private String board_days;
+}

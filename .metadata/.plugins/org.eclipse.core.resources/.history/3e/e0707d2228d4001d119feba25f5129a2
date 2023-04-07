@@ -1,0 +1,11 @@
+package com.DevFox.JUS.domain;
+
+import lombok.Data;
+
+@Data
+public class RequestDTO {
+	private String user_name;
+	private int board_idx;
+	private String request_user;
+	private int request_order;
+}

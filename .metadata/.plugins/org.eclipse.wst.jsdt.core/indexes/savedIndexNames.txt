@@ -1,0 +1,9 @@
+INDEX VERSION 1.4+C:\JUS\work\DevfoxProject\.metadata\.plugins\org.eclipse.wst.jsdt.core\indexes
+2377025323.index
+3640165775.index
+2665856807.index
+503569688.index
+802761122.index
+4274888657.index
+2329543956.index
+3136664307.index

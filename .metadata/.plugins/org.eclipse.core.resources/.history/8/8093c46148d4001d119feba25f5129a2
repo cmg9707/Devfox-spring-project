@@ -1,0 +1,6 @@
+package com.DevFox.JUS.mapper;
+
+public interface JUSMapper {
+	//user 全体照会
+		public int User_Count();
+}

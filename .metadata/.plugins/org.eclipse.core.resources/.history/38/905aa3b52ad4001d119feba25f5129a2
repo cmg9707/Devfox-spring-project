@@ -1,0 +1,5 @@
+package com.DevFox.JUS.mapper;
+
+public interface JUSService {
+
+}

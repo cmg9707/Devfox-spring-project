@@ -1,0 +1,5 @@
+INDEX VERSION 1.131
+C:\JUS\work\DevfoxProject\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\2377025323.index
+\DevJUS\src\main\java
+C:\JUS\work\DevfoxProject\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\3640165775.index
+\DevJUS\src\main\resources

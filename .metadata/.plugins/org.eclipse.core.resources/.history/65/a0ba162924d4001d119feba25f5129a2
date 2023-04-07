@@ -1,0 +1,13 @@
+package com.DevFox.JUS.domain;
+
+import lombok.Data;
+
+@Data
+public class UserDTO {
+	private String Userid;
+	private String Username;
+	private String pass;
+	private String birth;
+	private String mail;
+	private String power;
+}

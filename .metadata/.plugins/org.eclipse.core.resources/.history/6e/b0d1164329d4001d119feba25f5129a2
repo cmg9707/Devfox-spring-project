@@ -1,0 +1,15 @@
+package com.DevFox.JUS.domain;
+
+import lombok.Data;
+
+@Data
+public class CommentDTO {
+	private int comment_idx;
+	private String user_name;
+	private int board_idx;
+	private int comment_grp;
+	private int comment_grps;
+	private int comment_grpl;
+	private String comment_content;
+	private String comment_date;
+}

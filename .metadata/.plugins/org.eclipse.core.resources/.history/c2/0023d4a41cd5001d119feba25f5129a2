@@ -1,0 +1,6 @@
+package com.DevFox.JUS.service;
+
+public interface JUSService {
+	//user 全体照会
+	public int User_Count();
+}

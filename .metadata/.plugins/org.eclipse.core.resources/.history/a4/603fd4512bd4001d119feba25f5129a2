@@ -1,0 +1,5 @@
+package com.DevFox.JUS.service;
+
+public class JUSServiceimpl implements JUSService {
+
+}

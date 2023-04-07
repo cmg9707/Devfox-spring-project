@@ -1,0 +1,10 @@
+package com.DevFox.JUS.mapper;
+
+import org.apache.ibatis.annotations.Mapper;
+import org.mybatis.spring.annotation.MapperScan;
+
+@MapperScan
+public interface JUSMapper {
+	//user 全体照会
+		public int User_Count();
+}

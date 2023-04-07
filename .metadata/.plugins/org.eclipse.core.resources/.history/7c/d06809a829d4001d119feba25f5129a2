@@ -1,0 +1,152 @@
+package com.jslhrd.controller;
+
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.jslhrd.domain.BoardDTO;
+import com.jslhrd.domain.PageDTO;
+import com.jslhrd.service.BoardService;
+
+import lombok.AllArgsConstructor;
+
+@Controller
+@AllArgsConstructor
+@RequestMapping("/Board")
+public class BoardController {
+	private static final Logger log=
+			LoggerFactory.getLogger(BoardController.class);
+	
+	private BoardService service;
+	
+	@GetMapping("board_list")
+	public String boardList(Model model) {
+		
+		List<BoardDTO> list =  service.boardList();
+		log.info("Controller boardList()....."+list.size());
+		model.addAttribute("totcount", service.boardCount());
+		model.addAttribute("list", list);
+		return "Board/board_list";
+	}
+	
+	@PostMapping("board_list")
+	public void boardListSearch(PageDTO dto, Model model) {
+		model.addAttribute("totcount", service.boardCountSearch(dto));
+		model.addAttribute("list", service.boardListSearch(dto));
+		log.info("Controller boardListSearch()....."+service.boardListSearch(dto).size());
+	}
+	
+	//글쓰기 폼
+	@GetMapping("board_write")
+	public void boardWrite() {
+		log.info("board_write......");
+	}
+	
+	@PostMapping("/board_write_pro")
+	public String boardWritePro(BoardDTO dto, RedirectAttributes rttr) {
+		int row = service.boardWrite(dto);
+		
+		rttr.addFlashAttribute("row", row);
+		return "redirect:board_write_pro";
+	}
+	
+	@GetMapping("board_write_pro")
+	public void boardWritePropass() {
+		
+	}
+	
+	@GetMapping("board_view")
+	public void boardView(@RequestParam("idx") int idx, Model model) {
+		log.info("board_View......");
+		//조회수 증가
+		//service.boardHits(idx);
+		//idx에 해당하는 글 검색
+		BoardDTO board = service.boardView(idx);
+		board.setContents(board.getContents().replace("\n", "<br>"));
+		model.addAttribute("board", board);
+	}
+	//쿠키 및 조회수 증가
+	@GetMapping("board_hits2")
+	public String boardHits2(@RequestParam("idx") int idx, HttpServletRequest request,
+			HttpServletResponse response) {
+		service.boardHits2(idx, request, response);
+		
+		return "redirect:board_view?idx="+idx;
+	}
+/*	
+	@GetMapping("board_hits")
+	public String boardHits(@RequestParam("idx") int idx, HttpServletRequest request,
+			HttpServletResponse response) {
+		boolean bool= false;
+		Cookie info = null;
+		Cookie[] cookies = request.getCookies();
+		for(int i=0 ; i<cookies.length; i++) { // 가지고 있는 쿠키 모두 조회
+			info = cookies[i];
+			if(info.getName().equals("boardCookie"+idx)) {//가지고 있는 쿠키 중에서 동일한것 찾기
+				bool = true;
+				break;
+			}
+		}
+		String str="" + System.currentTimeMillis();
+		if(!bool) {// 쿠키가 존재하지 않을 시
+			info = new Cookie("boardCookie"+ idx, str);
+			info.setMaxAge(60*5);//5분
+			response.addCookie(info);
+			service.boardHits(idx);
+	}
+		return "redirect:board_view?idx="+idx;
+	
+	}
+*/
+	
+	//수정폼
+	@GetMapping("board_modify")
+	public void boardModify(@RequestParam("idx")int idx, Model model) {
+		log.info("board_modify......");
+		service.boardView(idx);
+		model.addAttribute("board",service.boardView(idx));
+	}
+	//수정처리
+	@PostMapping("board_modify")
+	public String boardModifyPro(BoardDTO dto, RedirectAttributes rttr) {
+		log.info("board_modifyPro......");
+		rttr.addFlashAttribute("row", service.boardModify(dto));
+		return "redirect:board_modify_pro";
+	}
+	//수정처리 알림
+	@GetMapping("board_modify_pro")
+	public void boardModifyPass() {
+		
+	}
+	
+	//삭제 시 비번입력 폼
+	@GetMapping("board_delete")
+	public void boardDelete(@ModelAttribute("idx")int idx ) {
+		log.info("board_delete.....");
+	}
+	
+	@PostMapping("board_delete")
+	public String boardDeletePro(BoardDTO dto, RedirectAttributes rttr) {
+		log.info("board_deletePro.....");
+		rttr.addFlashAttribute("row" , service.boardDelete(dto));
+		
+		return "redirect:board_delete_pro";
+	}
+	//삭제후 알림
+	@GetMapping("board_delete_pro")
+	public void boardDeletePass() {
+		
+	}
+}

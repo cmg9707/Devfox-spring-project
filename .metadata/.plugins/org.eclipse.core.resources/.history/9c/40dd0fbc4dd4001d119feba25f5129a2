@@ -1,0 +1,8 @@
+package com.DevFox.JUS.mapper;
+
+@Repository
+@RequiredArgsConstructor
+public interface JUSMapper {
+	//user 全体照会
+	public int User_Count();
+}

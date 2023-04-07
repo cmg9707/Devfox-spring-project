@@ -1,0 +1,18 @@
+package com.DevFox.JUS.Test;
+
+import org.junit.Test;
+
+import com.DevFox.JUS.service.JUSService;
+
+import lombok.extern.log4j.Log4j;
+@Log4j
+public class JUSServiceTest {
+	
+	private JUSService service;
+	
+	@Test
+	public void testUserCount() {
+		int count = service.User_Count();
+		log.info("service count : " + count);
+	}
+}

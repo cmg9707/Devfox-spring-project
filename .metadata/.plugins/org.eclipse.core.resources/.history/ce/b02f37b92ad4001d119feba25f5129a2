@@ -1,0 +1,5 @@
+package com.DevFox.JUS.mapper;
+
+public class JUSServiceimpl implements JUSService {
+
+}
