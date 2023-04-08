@@ -9,7 +9,14 @@
 	</select>
 	
 	<select id="User_Chk" resultType="int">
-		select count(*) from user where #{user_id_name} = #{user_id_value}
+		select count(*) from user where ${username} = #{user_value}
 	</select>
-</mapper>                       
+	
+	<insert id="User_join">
+		insert into user(user_id,user_name,user_pass,user_birth,user_mail)
+				value(#{user_id},#{user_name},#{user_pass},#{user_birth}, #{user_mail});
+	</insert>
+	
+</mapper>     
+                  
                    

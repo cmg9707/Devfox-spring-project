@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.DevFox.JUS.domain.UserDTO;
 import com.DevFox.JUS.mapper.JUSMapper;
 
 import lombok.AllArgsConstructor;
@@ -25,7 +26,13 @@ public class JUSServiceimpl implements JUSService {
 		}
 	
 	@Override
-	public int User_Chk(String user_id_name ,String user_id_value) {
-		return mapper.User_Chk(user_id_name ,user_id_value);
+	public int User_Chk(String username ,String user_value) {
+		
+		return mapper.User_Chk(username ,user_value);
+	}
+	
+	@Override
+	public void User_join(UserDTO dto) {
+		mapper.User_join(dto);
 	}
 }
