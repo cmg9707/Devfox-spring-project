@@ -1,0 +1,15 @@
+package com.DevFox.JUS.service;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.DevFox.JUS.controller.JUSController;
+
+public interface JUSService {
+	//user 全体照会
+	public int User_Count();
+	
+	//user 突き合せ
+	public int User_Chk(String user_name1 ,String user_value );
+
+}

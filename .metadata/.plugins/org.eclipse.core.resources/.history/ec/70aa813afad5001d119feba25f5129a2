@@ -1,0 +1,18 @@
+package com.DevFox.JUS.mapper;
+
+import org.apache.ibatis.annotations.Mapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
+
+@Mapper
+public interface JUSMapper {
+	private static final Logger log=
+			LoggerFactory.getLogger(JUSMapper.class);
+	//user 全体照会
+	public int User_Count();
+	
+	//user 突き合せ
+	public int User_Chk(String user_id);
+}

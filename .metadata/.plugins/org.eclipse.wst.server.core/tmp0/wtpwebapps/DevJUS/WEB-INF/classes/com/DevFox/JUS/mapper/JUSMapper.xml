@@ -9,7 +9,7 @@
 	</select>
 	
 	<select id="User_Chk" resultType="int">
-		select count(*) from user where user_id = #{user_id}
+		select count(*) from user where #{user_id_name} = #{user_id_value}
 	</select>
 </mapper>                       
                    
