@@ -1,0 +1,57 @@
+choitaeho@devfox.co.jp 
+cc(참조)에 jojihun@devfox.co.jp
+
+오류 모음
+
+설정단계 : 
+ method 'initialize' not found = Junit 라이브러리 추가를 안했음
+ No qualifying bean of type = mybatis-spring:scan을 설정하지 않아서 MyBatis가 Mapper를 못찾았음
+위와 비슷한게 context:component-scan은 스프링이 자동으로 빈을 찾음. 이걸로 @Service어노테이션이 붙은 클래스를 자동으로 빈으로 등록
+
+프론트 과정에서 한글 깨짐 = web.xml에 인코딩 필터 추가 
+
+구현단계:
+ajax에서 ajax success로 안가짐 = contorller에서 반환하는 값에 따라 dataType을 달리 해줘야함
+dataType : html
+dataType :json
+dataType : text
+
+success로 가는데 리턴 타입이 문자열이 ???로 표시됨  = Mapping에도 contentType: "application/text; charset=UTF-8" 를 추가시켜서 해결
+
+
+@GetMapping("join_mailCh")
+	public String checkEmail(@RequestParam("user_mail") String user_mail ,Model model) {
+		log.info("checkEmail call........");
+		model.addAttribute("user_mail", user_mail);
+	    return "JUS/join_mailCh";
+	}
+
+join_mailCh.jsp
+
+
+
+
+	function mailChack(){
+		    // 認証のために新しい移動
+		    var mail = join.user_mail.value;
+			if(mail==""){
+				alert("메일을 입력하고 누르세요")
+				join.user_mail.focus
+				return;
+			}else if(mail.indexOf("@")== -1){
+				alert("이메일 형식을 확인해 주세요.")
+				join.user_mail.focus
+				return;
+			}else if(mail.lastIndexOf("@") == mail.length - 1){
+				alert("@ 뒤에도 입력해주세요.")
+				join.user_mail.focus
+				return;
+			}
+		    
+			var url="join_mailCh?user_mail="+join.user_mail.value;
+			open(url,"mailwindow", "statusbar=no, scrollbar=no, menubar=no, width=450, height=200" );
+			
+	    }
+	    
+	    const emailButton = document.querySelector('#emailbut')
+	    const emailForm = document.querySelector('#email');

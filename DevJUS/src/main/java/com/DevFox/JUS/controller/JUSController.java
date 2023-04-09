@@ -2,11 +2,16 @@ package com.DevFox.JUS.controller;
 
 
 
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Random;
 
 import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,13 +19,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.DevFox.JUS.domain.BoardDTO;
 import com.DevFox.JUS.domain.UserDTO;
 import com.DevFox.JUS.service.JUSService;
 
@@ -122,8 +130,87 @@ public class JUSController {
 		String user_pass = dto.getUser_pass();
 		String user_mail = dto.getUser_mail();
 		String user_birth = dto.getUser_birth();
-		System.out.print(user_id+","+user_name+","+user_pass+","+user_mail+","+user_birth );
+		//System.out.print(user_id+","+user_name+","+user_pass+","+user_mail+","+user_birth );
 		service.User_join(dto);
 		
+	}
+	
+	@GetMapping("login")
+	public void Getlogin() {
+		
+		log.info("Getlogin.jsp call........");
+
+	}
+	@ResponseBody
+	@GetMapping("login_Chk")
+	public String Login_chk(@RequestParam("user_id") String user_id ,@RequestParam("user_pass") String user_pass
+			,HttpServletRequest request, HttpServletResponse response,Model model) {
+		log.info("Login_chk.jsp call........" + user_id);
+	    log.info("Login_chk.jsp call........" + user_pass);
+
+	    int id_c = service.User_login_id(user_id);
+
+	    if (id_c == 0) { // 아이디가 존재하지 않을 때
+	        return "0";
+	    } else { // 아이디가 존재할 때
+	        int pass_c = service.User_login_idpass(user_id, user_pass);
+
+	        if (pass_c == 0) { // 비밀번호가 틀렸을 때
+	            return "1";
+	        } else { // 로그인 성공
+	        	UserDTO dto = service.user_select(user_id);
+	        	HttpSession session = request.getSession();// 세션 생성
+	        	session.setAttribute("user", dto);
+	        	session.setMaxInactiveInterval(1800);//세션 유지시간 1800초
+	        	model.addAttribute("user" ,session );
+	            return "2";
+	        }
+	        
+	    }
+
+	}
+	@GetMapping("board")
+	public void Getboard() {
+		
+		log.info("Getboard call........");
+
+	}
+	
+	@GetMapping("writing")
+	public void Getwriting() {
+		
+		log.info("Getwriting call........");
+
+	}
+	
+	@PostMapping("writing")
+	public void Postwriting(@RequestParam("board_title") String board_title,
+			@RequestParam("board_content") String board_content,
+			@RequestParam("user_name") String user_name,
+			@RequestParam("board_limit") String board_limit,
+			@RequestParam("board_address") String board_address,
+			@RequestParam("board_days") String board_days,
+			@RequestParam("board_end") String board_end,
+			@RequestParam("board_period_start") String board_period_start,
+			@RequestParam("board_period_end") String board_period_end
+			,@RequestParam("board_poto") MultipartFile file) throws Exception{
+		BoardDTO dto = new BoardDTO();
+		log.info("Getwriting call........"+ file.getOriginalFilename()); //파일 원래 이름
+		String board_poto = file.getOriginalFilename();
+		int board_poto_new = service.Board_Count();// boardCount
+		FileOutputStream fos = new FileOutputStream("C:/JSU/Devfox-spring-project/DevJUS/uploadimg/"+file.getOriginalFilename()+board_poto_new);
+		 // 파일 저장할 경로 + 파일명을 파라미터로 넣고 fileOutputStream 객체 생성하고
+		InputStream is = file.getInputStream();
+		 // file로 부터 inputStream을 가져온다.
+		int readCount = 0;
+        byte[] buffer = new byte[1024];
+        // 파일을 읽을 크기 만큼의 buffer를 생성하고
+        while ((readCount = is.read(buffer)) != -1) {
+          //  파일에서 가져온 fileInputStream을 설정한 크기 (1024byte) 만큼 읽고
+            
+         fos.write(buffer, 0, readCount);
+          // 위에서 생성한 fileOutputStream 객체에 출력하기를 반복한다
+        };
+
 	}
 }

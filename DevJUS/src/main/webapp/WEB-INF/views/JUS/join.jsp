@@ -19,28 +19,10 @@
         <nav class="navbar navbar-light bg-light static-top">
             <div class="container">
                 <a class="navbar-brand" href="#!">모임나라</a>
-                <div class="dropdown">
- 				 <button class="btn btn-primary  dropdown-toggle " type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-  					  로그인
-  				 </button>
-  				<div class="dropdown-menu" style="width: 300px;">
-  					<form class="px-4 py-3" name="login" method="post" action="login">
-    					<div class="mb-3">
-      				       <label for="exampleDropdownFormEmail1" class="form-label">이메일</label>
-     					   <input type="email" class="form-control" id="exampleDropdownFormEmail1" placeholder="email@example.com">
-                        </div>
-                        <div class="mb-3">
-                           <label for="exampleDropdownFormPassword1" class="form-label">비밀번호</label>
-                           <input type="password" class="form-control" id="exampleDropdownFormPassword1" placeholder="Password">
-                        </div>
-   				 		<button type="submit" class="btn btn-primary">로그인</button>
-  					</form>
- 			   	<div class="dropdown-divider"></div>
-  					<a class="dropdown-item" href="join">회원가입</a>
-  					<a class="dropdown-item" href="#">비밀번호 찾기</a>
-				</div>
-                   
-                </div>
+                <div >
+				<a href="login" style="margin: 10px;">로그인</a>
+                <a href="join">회원가입</a>   
+             	</div>
             </div>
         </nav>
         <!-- form -->

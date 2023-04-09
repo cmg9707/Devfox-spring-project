@@ -26,6 +26,11 @@ public class JUSServiceimpl implements JUSService {
 		}
 	
 	@Override
+	public int Board_Count() {
+		return mapper.Board_Count();
+	}
+	
+	@Override
 	public int User_Chk(String username ,String user_value) {
 		
 		return mapper.User_Chk(username ,user_value);
@@ -34,5 +39,20 @@ public class JUSServiceimpl implements JUSService {
 	@Override
 	public void User_join(UserDTO dto) {
 		mapper.User_join(dto);
+	}
+	
+	@Override
+	public int User_login_id(String user_id) {
+		return mapper.User_login_id(user_id);
+	}
+	
+	@Override
+	public int User_login_idpass(String user_id, String user_pass) {
+		return mapper.User_login_idpass(user_id, user_pass);
+	}
+	
+	@Override
+	public UserDTO user_select(String user_id) {
+		return mapper.user_select(user_id);
 	}
 }

@@ -8,6 +8,10 @@
 		select count(*) from user
 	</select>
 	
+	<select id="Board_Count" resultType="int">
+		select count(*) from board
+	</select>
+	
 	<select id="User_Chk" resultType="int">
 		select count(*) from user where ${username} = #{user_value}
 	</select>
@@ -17,6 +21,17 @@
 				value(#{user_id},#{user_name},#{user_pass},#{user_birth}, #{user_mail});
 	</insert>
 	
+	<select id="User_login_id" resultType="int">
+		select count(*) from user where user_id = #{user_id}
+	</select>
+	
+	<select id="User_login_idpass" resultType="int">
+		select count(*) from user where user_id = #{user_id} and user_pass = #{user_pass}
+	</select>
+	
+	<select id="user_select" resultType="com.DevFox.JUS.domain.UserDTO">
+		select * from user where user_id = #{user_id}
+	</select>
 </mapper>     
                   
                    
