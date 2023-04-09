@@ -195,10 +195,11 @@ public class JUSController {
 			@RequestParam("board_period_end") String board_period_end
 			,@RequestParam("board_poto") MultipartFile file) throws Exception{
 		BoardDTO dto = new BoardDTO();
-		log.info("Getwriting call........"+ file.getOriginalFilename()); //파일 원래 이름
-		String board_poto = file.getOriginalFilename();
+		log.info("Getwriting call........"+ file.getOriginalFilename()); 
+		String board_poto = file.getOriginalFilename();//파일 원래 이름
+		String[] newpotoname = board_poto.split("\\.");//split()은 정규문자열로 나타내는데 .은 모든 문자열이라는 뜻으로 .으로 나누기 위해서는 \를 추가시켜서 문자그대로 인식시켜야한다.
 		int board_poto_new = service.Board_Count();// boardCount
-		FileOutputStream fos = new FileOutputStream("C:/JSU/Devfox-spring-project/DevJUS/uploadimg/"+file.getOriginalFilename()+board_poto_new);
+		FileOutputStream fos = new FileOutputStream("C:/JSU/Devfox-spring-project/DevJUS/uploadimg/"+newpotoname[0]+board_poto_new+"."+newpotoname[1]);
 		 // 파일 저장할 경로 + 파일명을 파라미터로 넣고 fileOutputStream 객체 생성하고
 		InputStream is = file.getInputStream();
 		 // file로 부터 inputStream을 가져온다.
