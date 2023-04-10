@@ -1,10 +1,13 @@
 package com.DevFox.JUS.service;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.DevFox.JUS.domain.BoardDTO;
 import com.DevFox.JUS.domain.UserDTO;
 import com.DevFox.JUS.mapper.JUSMapper;
 
@@ -54,5 +57,21 @@ public class JUSServiceimpl implements JUSService {
 	@Override
 	public UserDTO user_select(String user_id) {
 		return mapper.user_select(user_id);
+	}
+	
+	@Override
+	public void board_writing(BoardDTO dto) {
+		mapper.board_writing(dto);
+		
+	}
+	
+	@Override
+	public List<BoardDTO> boardList() {
+		return mapper.boardList();
+	}
+	
+	@Override
+	public BoardDTO viewDTO(String board_idx) {
+		return mapper.viewDTO(board_idx);
 	}
 }

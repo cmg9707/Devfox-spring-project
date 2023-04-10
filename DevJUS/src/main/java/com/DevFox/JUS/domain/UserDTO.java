@@ -10,5 +10,5 @@ public class UserDTO {
 	private String user_birth;//生年月日
 	private String user_mail;//メール
 	private String user_power;//権限
-	private int user_writing_number;
+	private int user_writing_number;//글 작성한 수
 }

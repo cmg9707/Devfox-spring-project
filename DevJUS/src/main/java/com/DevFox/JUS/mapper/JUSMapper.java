@@ -1,8 +1,11 @@
 package com.DevFox.JUS.mapper;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import com.DevFox.JUS.domain.BoardDTO;
 import com.DevFox.JUS.domain.UserDTO;
 
 
@@ -30,4 +33,13 @@ public interface JUSMapper {
 	
 	//user_select
 	public UserDTO user_select(String user_id);
+	
+	//board 글쓰기
+	public void board_writing(BoardDTO dto);
+	
+	//board List
+	public List<BoardDTO> boardList();
+	
+	//view
+	public BoardDTO viewDTO(String board_idx);
 }

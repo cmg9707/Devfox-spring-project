@@ -1,5 +1,8 @@
 package com.DevFox.JUS.service;
 
+import java.util.List;
+
+import com.DevFox.JUS.domain.BoardDTO;
 import com.DevFox.JUS.domain.UserDTO;
 
 public interface JUSService {
@@ -24,5 +27,12 @@ public interface JUSService {
 	//user_select
 	public UserDTO user_select(String user_id);
 	
+	//board 글쓰기
+	public void board_writing(BoardDTO dto);
 	
+	//board List
+	public List<BoardDTO> boardList();
+	
+	//view
+	public BoardDTO viewDTO(String board_idx);
 }

@@ -32,6 +32,22 @@
 	<select id="user_select" resultType="com.DevFox.JUS.domain.UserDTO">
 		select * from user where user_id = #{user_id}
 	</select>
+	
+	<insert id="board_writing">
+		insert into board(user_name,board_title,board_content,board_poto,board_poto_new,
+		board_address,board_period_start,board_period_end,board_end,board_limit,board_days)
+				value(#{user_name},#{board_title},#{board_content},#{board_poto},
+				#{board_poto_new},#{board_address},#{board_period_start},#{board_period_end},
+				#{board_end},#{board_limit},#{board_days});
+	</insert>
+	
+	<select id="boardList" resultType="com.DevFox.JUS.domain.BoardDTO">
+		select * from board
+	</select>
+	
+	<select id="viewDTO" resultType="com.DevFox.JUS.domain.BoardDTO">
+		select * from board  where board_idx = #{board_idx}
+	</select>
 </mapper>     
                   
                    

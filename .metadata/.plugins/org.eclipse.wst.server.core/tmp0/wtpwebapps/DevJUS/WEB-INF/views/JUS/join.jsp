@@ -19,28 +19,10 @@
         <nav class="navbar navbar-light bg-light static-top">
             <div class="container">
                 <a class="navbar-brand" href="#!">모임나라</a>
-                <div class="dropdown">
- 				 <button class="btn btn-primary  dropdown-toggle " type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-  					  로그인
-  				 </button>
-  				<div class="dropdown-menu" style="width: 300px;">
-  					<form class="px-4 py-3" name="login" method="post" action="login">
-    					<div class="mb-3">
-      				       <label for="exampleDropdownFormEmail1" class="form-label">이메일</label>
-     					   <input type="email" class="form-control" id="exampleDropdownFormEmail1" placeholder="email@example.com">
-                        </div>
-                        <div class="mb-3">
-                           <label for="exampleDropdownFormPassword1" class="form-label">비밀번호</label>
-                           <input type="password" class="form-control" id="exampleDropdownFormPassword1" placeholder="Password">
-                        </div>
-   				 		<button type="submit" class="btn btn-primary">로그인</button>
-  					</form>
- 			   	<div class="dropdown-divider"></div>
-  					<a class="dropdown-item" href="join">회원가입</a>
-  					<a class="dropdown-item" href="#">비밀번호 찾기</a>
-				</div>
-                   
-                </div>
+                <div >
+				<a href="login" style="margin: 10px;">로그인</a>
+                <a href="join">회원가입</a>   
+             	</div>
             </div>
         </nav>
         <!-- form -->
@@ -48,7 +30,7 @@
 		<div class="input-form-backgroud row">
 			<div class="input-form col-md-12 mx-auto">
 				<h4 class="mb-3" style="text-align: center;">회원가입</h4>
-				<form class="join" name="join" action="join"method="post">
+				<form class="join" name="join" action="index"method="post">
 					<div class="row d-flex justify-content-center">
 						<div class="col-md-5 mb-3" id="user_id1">
 							<label for="user_id">아이디</label> 
@@ -60,32 +42,45 @@
 					</div>
 					<div class="row d-flex justify-content-center">
 						<div class="col-md-5 mb-3">
-								<label for="user_name">닉네임</label> <input type="text"
+								<label for="user_name">닉네임</label> 
+								<input type="text" maxlength="8"
 									class="form-control" id="user_name" name ="user_name" placeholder="닉네임 입력하세요" value="">
 									<span class="user-name-error-message" style="color: red;">닉네임를 입력하세요.</span>
 							</div>
 					</div>
 					<div class="row d-flex justify-content-center">
 						<div class="col-md-5 mb-3">
-							<label for="nickname">비밀번호</label> 
-							<input type="password"class="form-control" size="15" id="passwd" name="passwd" placeholder="비밀번호를 입력하세요"value="" >
+							<label for="user_pass">비밀번호</label> 
+							<input type="password"class="form-control" size="15" id="user_pass" name="user_pass" placeholder="비밀번호를 입력하세요"value=""
+							maxlength="15" >
+							<span class="user-pass-error-message" style="color: red;">비밀번호를 입력하세요.</span>
 						</div>
 					</div>
 
-					<div class="row d-flex justify-content-center" >
-						<div class="col-md-5 mb-3">
-							<label for="email">이메일</label> 
-							<input type="email"
-								class="form-control" id="user_mail" name="user_mail" value="" placeholder="abc1@naver.com"
-								pattern="[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]+">
-							<button class="btn btn-primary btn-lg btn-block my-2" id="mailbut" name="mailbut"
-								value=""type="button"  onclick="mailChack()" >인증하기</button>
-						</div>
+					<div class="row d-flex justify-content-center">
+ 						 <div class="col-md-5 mb-2">
+    						<div class="row">
+      							<div class="col-md-8">
+        							<label for="user_mail">이메일</label> 
+        							<input type="email" class="form-control" id="user_mail" name="user_mail" value="" 
+        							placeholder="abc1@naver.com / 네이버 , 구글만"  >
+      							</div>
+      							<div class="col-md-4" style="margin-top: 2%;">
+        							<button class="btn btn-primary btn-lg btn-block my-2" id="mailbut" name="mailbut" value="" 
+        							type="button" onclick="mailChack()" style="width: 100%; height: 70%; ">번호전송</button>
+      							</div>
+    						</div>
+    						<div class="mb-4" >
+							<input type="email" class="form-control" id="mail_ok" name="mail_ok" value="" placeholder="인증번호" style="display:none;">
+							<span class="user-mail-error-message" style="color: red;"></span>
+							<input type="hidden" name=mail_ch_value id="mail_ch_value" value="">
+							</div>
+  						</div>
 					</div>
 					
 					<div class="row d-flex justify-content-center" >
 						<div class="col-md-5 mb-3">
-							<label for="email">생년월일</label> 
+							<label for="user_birth">생년월일</label> 
 							<input type="date" class="form-control" id="user_birth" name="user_birth" value="" >
 						</div>
 					</div>
@@ -96,13 +91,14 @@
 				</form>
 			</div>
 		</div>
+		
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 		<script>
 		//全部入力したか確認
 		var user_id_check = 0;  
 		var user_name_check = 0;
-		var user_pass = 0;
-		var user_mail =0;
+		var user_pass_check = 0;
+		var user_mail_check =0;
 		
 		//user_id で入力が発生したとき
 		$("#user_id").on("input", function() {
@@ -146,7 +142,7 @@
 		$("#user_name").on("input", function() {
 			var user_name = $(this).val(); //user_nameの値
 			if(user_name != ""){
-				var filteredText = user_name.replace(new RegExp('[a-zA-Z0-9가-힣]', 'g'), '');
+				var filteredText = user_name.replace(new RegExp('[^a-zA-Z0-9가-힣]', 'g'), '');
 		 		//けんえつされた文字列を再び入れてあげる
 				$(this).val(filteredText);
 				var lengt = $(this).val().length; //じかず
@@ -178,9 +174,83 @@
 			  		user_id_check = 0;
 				}
 		})
-		
+			$("#user_pass").on("input", function() {
+				var user_pass = $(this).val().length; //user_passの値
+				if(user_pass <= 3 && user_pass !="" ){
+					$('.user-pass-error-message').text('3글자 이하는 안됩니다.').css('color', 'red');
+					user_pass_check = 0;
+				}else if(user_pass ==""){
+					$('.user-pass-error-message').text('비밀번호를 입력하세요.').css('color', 'red');
+					user_pass_check = 0;
+				}else{
+					$('.user-pass-error-message').text('사용할 수 있는 비밀번호입니다.').css('color', 'blue');
+					user_pass_check = 1;
+				}
+			});
 	
-
+		function mailChack() {
+			  var email = $('#user_mail').val();
+			  var emailRegex = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]+$/;
+			  if (!emailRegex.test(email)) {
+			    alert("올바른 이메일 주소를 입력해주세요.");
+			    $('#user_mail').focus()
+			    return;
+			  } 
+				console.log(email);
+			  	$.ajax({
+			  		url :"user_mailck?user_mail="+email,
+			  		type :"GET",
+			  		success:function(data){
+			  			//console.log("data : "+ data);
+			  			var mailChValue = data;
+			  			 $('#mail_ch_value').val(mailChValue);
+			  			 $('#mail_ok').show();
+			  		}
+			  	});
+			};
+			
+			$("#mail_ok").on("input", function() {
+				var mail_ok = $(this).val();
+				var mail_ch_value = $("#mail_ch_value").val();
+				console.log("mail_ch_value : "+ mail_ch_value);
+				if(mail_ok != mail_ch_value){
+					$('.user-mail-error-message').text('인증번호가 다릅니다.').css('color', 'red');
+					user_mail_check = 0;
+				}else{
+					$('.user-mail-error-message').text('인증번호가 맞습니다.').css('color', 'blue');
+					user_mail_check = 1;
+				}
+			});
+			
+			function send(){
+				var user_birth = $('#user_birth').val();
+				if(user_id_check==0){
+					alert("아이디를 확인하세요")
+					$('#user_id').focus()
+					return
+				}
+				if(user_name_check == 0){
+					alert("닉네임를 확인하세요")
+					$('#user_name').focus()
+					return
+				}
+				if(user_pass_check == 0){
+					alert("비밀번호를 확인하세요")
+					$('#user_pass').focus()
+					return
+				}
+				if(user_mail_check == 0){
+					alert("비밀번호를 확인하세요")
+					$('#user_mail').focus()
+					return
+				}
+				if(user_birth == ""){
+					alert("생년월일을 확인하세요")
+					return
+				}
+				alert("회원가입을 환영합니다.")
+				join.submit();
+			}
 		</script>
 		<!-- Footer-->
         <footer class="footer bg-light">

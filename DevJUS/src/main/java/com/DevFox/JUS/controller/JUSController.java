@@ -170,8 +170,8 @@ public class JUSController {
 
 	}
 	@GetMapping("board")
-	public void Getboard() {
-		
+	public void Getboard(Model model) {
+		model.addAttribute("board", service.boardList());
 		log.info("Getboard call........");
 
 	}
@@ -184,7 +184,7 @@ public class JUSController {
 	}
 	
 	@PostMapping("writing")
-	public void Postwriting(@RequestParam("board_title") String board_title,
+	public String Postwriting(@RequestParam("board_title") String board_title,
 			@RequestParam("board_content") String board_content,
 			@RequestParam("user_name") String user_name,
 			@RequestParam("board_limit") String board_limit,
@@ -194,12 +194,14 @@ public class JUSController {
 			@RequestParam("board_period_start") String board_period_start,
 			@RequestParam("board_period_end") String board_period_end
 			,@RequestParam("board_poto") MultipartFile file) throws Exception{
-		BoardDTO dto = new BoardDTO();
+		
 		log.info("Getwriting call........"+ file.getOriginalFilename()); 
 		String board_poto = file.getOriginalFilename();//파일 원래 이름
 		String[] newpotoname = board_poto.split("\\.");//split()은 정규문자열로 나타내는데 .은 모든 문자열이라는 뜻으로 .으로 나누기 위해서는 \를 추가시켜서 문자그대로 인식시켜야한다.
-		int board_poto_new = service.Board_Count();// boardCount
-		FileOutputStream fos = new FileOutputStream("C:/JSU/Devfox-spring-project/DevJUS/uploadimg/"+newpotoname[0]+board_poto_new+"."+newpotoname[1]);
+		Random random = new Random();
+		int board_poto_Count = random.nextInt(888888)+111111;
+		String board_poto_new = newpotoname[0]+board_poto_Count+"."+newpotoname[1];
+		FileOutputStream fos = new FileOutputStream("C:/JUS/work/DevfoxProject/DevJUS/src/main/webapp/resources/css/uploadimg/"+board_poto_new);
 		 // 파일 저장할 경로 + 파일명을 파라미터로 넣고 fileOutputStream 객체 생성하고
 		InputStream is = file.getInputStream();
 		 // file로 부터 inputStream을 가져온다.
@@ -212,6 +214,43 @@ public class JUSController {
          fos.write(buffer, 0, readCount);
           // 위에서 생성한 fileOutputStream 객체에 출력하기를 반복한다
         };
+        BoardDTO dto = new BoardDTO();
+		dto.setBoard_title(board_title);
+		dto.setBoard_content(board_content);
+		dto.setUser_name(user_name);
+		dto.setBoard_limit(Integer.parseInt(board_limit));
+		dto.setBoard_address(board_address);
+		dto.setBoard_days(board_days);
+		dto.setBoard_end(board_end);
+		dto.setBoard_period_start(board_period_start);
+		dto.setBoard_period_end(board_period_end);
+		dto.setBoard_poto(board_poto);// 원본이름
+		dto.setBoard_poto_new(board_poto_new);
+		
+		service.board_writing(dto);
+		
+		return "redirect:board";
+	}
+	
+	@GetMapping("view")
+	public void Getview(@RequestParam("board_idx") String board_idx, Model model) {
+		
+		model.addAttribute("board", service.viewDTO(board_idx));
+		log.info("Getview call........");
 
+	}
+	
+	@ResponseBody
+	@PostMapping("view_request")
+	public void View_Request(@RequestParam("user_name") String user_name,
+							 @RequestParam("board_idx") String board_idx,
+							 @RequestParam("request_user") String request_user) {
+		
+		log.info("View_Request call........"+user_name);
+		log.info("View_Request call........"+board_idx);
+		log.info("View_Request call........"+request_user);
+		
+		//여기다가 신청자 갱신
+		
 	}
 }

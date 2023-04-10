@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html lang="en">
     <head>
         <meta charset="utf-8" />
@@ -19,41 +19,25 @@
         <nav class="navbar navbar-light bg-light static-top">
             <div class="container">
                 <a class="navbar-brand" href="#!">모임나라</a>
-                <div class="dropdown">
- 				 <button class="btn btn-primary  dropdown-toggle " type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-  					  로그인
-  				 </button>
-  				<div class="dropdown-menu" style="width: 300px;">
-  					<form class="px-4 py-3" name="login" method="post" action="login">
-    					<div class="mb-3">
-      				       <label for="exampleDropdownFormEmail1" class="form-label">이메일</label>
-     					   <input type="email" class="form-control" id="exampleDropdownFormEmail1" placeholder="email@example.com">
-                        </div>
-                        <div class="mb-3">
-                           <label for="exampleDropdownFormPassword1" class="form-label">비밀번호</label>
-                           <input type="password" class="form-control" id="exampleDropdownFormPassword1" placeholder="Password">
-                        </div>
-   				 		<button type="submit" class="btn btn-primary">로그인</button>
-  					</form>
- 			   	<div class="dropdown-divider"></div>
-  					<a class="dropdown-item" href="join">회원가입</a>
-  					<a class="dropdown-item" href="#">비밀번호 찾기</a>
-				</div>
-                   
-                </div>
+                <div >
+				<a href="login" style="margin: 10px;">로그인</a>
+                <a href="join">회원가입</a>   
+             	</div>
             </div>
         </nav>
-        
+        <!-- login -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
         
         <!-- Masthead-->
-        <header class="masthead" style="background-image: url('/resources/css/img/group1920.jpg')">
+        <header class="masthead" style="background-image: url('/resources/css/img/group1920.jpg');background-size: 100% 100%;">
             <div class="container position-relative">
                 <div class="row justify-content-center">
                     <div class="col-xl-6">
                         <div class="text-center text-white">
                             <!-- Page heading-->
                             <h1 class="mb-5" >어서오세요</h1>
-                            <!-- Signup form-->
+                            
 
 
                         </div>
@@ -93,21 +77,21 @@
         <section class="showcase">
             <div class="container-fluid p-0">
                 <div class="row g-0">
-                    <div class="col-lg-6 order-lg-2 text-white showcase-img" style="background-image: url('/resources/css/img/email.png')"></div>
+                    <div class="col-lg-6 order-lg-2 text-white showcase-img" style="background-image: url('/resources/css/img/email.png');background-size: 100% 100%;"></div>
                     <div class="col-lg-6 order-lg-1 my-auto showcase-text">
                         <h2>편리함</h2>
                         <p class="lead mb-0">이메일 하나만 있으면 간편하게 회원가입 완료!</p>
                     </div>
                 </div>
                 <div class="row g-0">
-                    <div class="col-lg-6 text-white showcase-img" style="background-image: url('/resources/css/img/group3.jpg')"></div>
+                    <div class="col-lg-6 text-white showcase-img" style="background-image: url('/resources/css/img/group3.jpg');background-size: 100% 100%;"></div>
                     <div class="col-lg-6 my-auto showcase-text">
                         <h2>공부 , 여가활동 , 취직</h2>
                         <p class="lead mb-0">모임의 경우 어떠한 것도 상관이 없습니다!</p>
                     </div>
                 </div>
                 <div class="row g-0">
-                    <div class="col-lg-6 order-lg-2 text-white showcase-img" style="background-image: url('/resources/css/img/group2.jpg')"></div>
+                    <div class="col-lg-6 order-lg-2 text-white showcase-img" style="background-image: url('/resources/css/img/group2.jpg');background-size: 100% 100%;"></div>
                     <div class="col-lg-6 order-lg-1 my-auto showcase-text">
                         <h2>향상</h2>
                         <p class="lead mb-0">혼자서 했을 때보다 보다 효율좋게 공부와 여가를 합시다!  </p>
