@@ -48,6 +48,46 @@
 	<select id="viewDTO" resultType="com.DevFox.JUS.domain.BoardDTO">
 		select * from board  where board_idx = #{board_idx}
 	</select>
+	
+	<select id="request_orderMax" resultType="int">
+		select max(request_order) from board where board_idx = #{board_idx}
+	</select>
+	
+	<update id="board_request_update">
+		update board set request_order = #{request_order} where board_idx = #{board_idx};
+	</update>
+	
+	<insert id="Requestinsert">
+		insert into request(user_name,board_idx,request_user,request_order)
+			value(#{user_name},#{board_idx},#{request_user},#{request_order})
+	</insert>
+	
+	<select id="ViewRequestOK" resultType="int">
+		select count(*) from request where board_idx =#{board_idx} and request_user = #{user_name};
+	</select>
+	
+	<delete id="RequestDe">
+		delete from request where board_idx = #{board_idx} and request_user = #{request_user};
+	</delete>
+	
+	<select id="recommendMax" resultType="int">
+		select max(board_recommend) from board where board_idx = #{board_idx}
+	</select>
+	
+	<update id="board_recommend_update">
+		update board set board_recommend = #{recommend_order} where board_idx = #{board_idx};
+	</update>
+	
+	<insert id="Recommendinsert">
+		insert into recommend(user_name, board_idx,recommend_user)
+			value(#{user_name},#{board_idx},#{recommend_user})
+	</insert>
+	
+	<select id="recommendOK" resultType="int">
+		select count(*) from recommend where board_idx = #{board_idx} and recommend_user = #{recommend_user};
+	</select>
+	
+
 </mapper>     
                   
                    

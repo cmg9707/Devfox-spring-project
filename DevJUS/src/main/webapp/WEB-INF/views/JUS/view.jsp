@@ -21,7 +21,7 @@
         <c:if test = "${user.user_power == 'x'}"> <!-- user -->
 				<a href="user_mu" ><img src="/resources/css/img/user.png" alt="" style="width: 10%;"></a>
 		</c:if>
-		<c:if test = "${user.user_power == 'o'}"> <!-- user -->
+		<c:if test = "${user.user_power == 'o'}"> <!-- admin -->
 				<a href="user_mu" >관리자</a>
 		</c:if>
 		 <c:if test = "${empty user}">
@@ -38,18 +38,46 @@
         <div class="container px-4 px-lg-5">
             <!-- Heading Row-->
             <div class="row gx-4 gx-lg-5 align-items-center my-5">
-                <div class="col-lg-7"><img class="img-fluid rounded mb-4 mb-lg-0" src="/resources/css/uploadimg/${board.board_poto_new }" alt="..." /></div>
-                <div class="col-lg-5">
+                <div class="col-lg-7"><img class="img-fluid rounded mb-4 mb-lg-0" src="/resources/css/uploadimg/${board.board_poto_new}" alt="..." /></div>
+                <div class="col-lg-5" id="title">
                     <h2 class="font-weight-light">${board.board_title}</h2>
                     <h3>${board.board_content}</h3>
-                    <h4>시작일  ${board.board_period_start} / 종료일  ${board.board_period_end}</h4>
-                    <a class="btn btn-primary" id="recommend">신청하기</a>
-                     <!-- 추천 기능 -->
-                    <button class="w3-button w3-black w3-round" id="rec_update" style="margin: 10px;">
-						<i class="fa fa-heart" style="font-size:16px;color:red"></i>
-						&nbsp;<span class="rec_count">추천 ${board.board_recommend}</span>
-					</button> 
+                    <h4>시작일 :  ${board.board_period_start} / 종료일 :  ${board.board_period_end}</h4>
+                    <h4 id="limitday">마감인원 : ${board.board_limit}  / 신청인원 : ${board.request_order}</h4>
                     
+                  <c:choose>
+                  	<c:when test="${board.board_limit !=board.request_order}">
+                  		<c:if test = "${reqOK == 0}">  
+                    		<a class="btn" id="request" data-value="0" style="background-color: blue; color: white;">신청하기</a>
+                 		</c:if>
+                 		<c:if test = "${reqOK != 0}">  
+                  			<a class="btn" id="request" style="background-color: red; color: white;" data-value="1">신청취소</a>
+                  		</c:if> 
+                  	</c:when>
+                  	<c:when test="${reqOK != 0}">
+                  			<a class="btn" id="request" style="background-color: red; color: white;" data-value="1">신청취소</a>
+                  	</c:when>
+                  	<c:otherwise>
+                  		<h2>마감입니다</h2>
+                  	</c:otherwise>
+                  </c:choose>
+                  
+                  <c:if test = "${recooOK == 0}"> 
+                     <!-- 추천 기능 -->
+                    <button class="w3-button w3-black w3-round" id="recommend" style="margin: 10px;">
+                    	<img src="/resources/css/img/heartO.png" alt="" style="width:50px; height:50px">
+						&nbsp;<span class="recommend_count"> ${board.board_recommend}</span>
+					</button> 
+                   </c:if>
+                   
+                   <c:if test = "${recooOK != 0}"> 
+                     <!-- 추천 기능 -->
+                    <button class="w3-button w3-black w3-round" id="recommend" style="margin: 10px;">
+                    	<img src="/resources/css/img/heartsX.png" alt="" style="width:50px; height:50px">
+						&nbsp;<span class="recommend_count"> ${board.board_recommend}</span>
+					</button> 
+					
+                   </c:if>  
                 </div>
             </div>
             <div class="card text-white bg-secondary my-5 py-4">
@@ -81,39 +109,120 @@
                     <div class="card h-100">
                         <div class="card-body">
                             <h2 class="card-title">신청마감</h2>
-                            <h3 class="card-text">${board.board_end}</h3>
+                            <h3 class="card-text">${board.board_end} 까지</h3>
                         </div>
-                        <div class="card-footer"><a class="btn btn-primary btn-sm" href="#!">More Info</a></div>
                     </div>
                 </div>
             </div>
-        </div>
+        
+        <!-- Comments section-->
+                    <section class="mb-5">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <!-- Comment form-->
+                                <form class="mb-4"><textarea class="form-control" rows="3" placeholder="Join the discussion and leave a comment!"></textarea>
+                                	<div style="text-align: right;">
+                                	<button type="button">등록</button>
+                                	</div>
+                                </form>
+                                <!-- Comment with nested comments-->
+                                
+                                <div class="d-flex mb-4">
+                                    <!-- Parent comment-->
+                                    <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
+                                    <div class="ms-3">
+                                        <div class="fw-bold">Commenter Name</div>
+                                        If you're going to lead a space frontier, it has to be government; it'll never be private enterprise. Because the space frontier is dangerous, and it's expensive, and it has unquantified risks.
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </section>
+         </div>
         <!-- Footer-->
         <footer class="py-5 bg-dark">
             <div class="container px-4 px-lg-5"><p class="m-0 text-center text-white">Copyright &copy; Your Website 2023</p></div>
         </footer>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
-	$("#recommend").click(function() {
+	//신청버튼 이벤트
+	$("#request").click(function() {
+		var requestvalue  = $('#request').data('value');
+		console.log(requestvalue);
 		  var user_name = '${board.user_name}';
 		  var board_idx = '${board.board_idx}';
 		  var request_user = '${user.user_name}';
+		 if(requestvalue == 0){
+			 $.ajax({
+					url: "view_request" ,
+					type: "Post",
+					dataType: "text",
+					data: { 
+						user_name: user_name,
+						board_idx : board_idx,
+						request_user : request_user
+						},
+					success: function(data) {
+						console.log(data+"성공");
+						$("#request").text("신청취소");
+						$("#request").css("background-color", "red" , "color" , "white");
+						$("#request").data("value", 1);
+						$("#limitday").text("마감인원 : ${board.board_limit}  / 신청인원 : "+data);
+						
+						}
+				  })
+		 }else{
+			 $.ajax({
+					url: "view_request_m" ,
+					type: "Post",
+					dataType: "text",
+					data: { 
+						board_idx : board_idx,
+						request_user : request_user
+						},
+					success: function(data) {
+						console.log("성공");
+						$("#request").text("신청하기");
+						$("#request").css("background-color", "blue", "color" , "white");
+						$("#request").data("value", 0);
+						$("#limitday").text("마감인원 : ${board.board_limit}  / 신청인원 : "+data);
+						}
+				  })
+		 }
 		  
-		  $.ajax({
-			url: "view_request" ,
-			type: "Post",
-			dataType: "text",
-			data: { 
-				user_name: user_name,
-				board_idx : board_idx,
-				request_user : request_user
-				},
-			success: function(data) {
-				console.log("성공");
-				}
-		  })
 		
 		});
+	
+	//추천버튼
+	$("#recommend").click(function() {
+		  var user_name = '${board.user_name}';
+		  var board_idx = '${board.board_idx}';
+		  var recommend_user = '${user.user_name}';
+		  var recommendButton = $('#recommend');
+
+		  $.ajax({
+				url: "view_recommend",
+				type: "Post",
+				dataType: "text",
+				data: { 
+					user_name: user_name,
+					board_idx : board_idx,
+					recommend_user : recommend_user
+					},
+				success: function(data) {
+					if(data ==0){
+						alert("이미 추천하셨습니다")
+					}else{
+						$("#recommend img").attr("src", "/resources/css/img/heartsX.png");
+						$("#recommend span").text(data);
+					}
+					
+					
+					}
+			  })
+		  
+	})
 </script>
     </body>
 </html>

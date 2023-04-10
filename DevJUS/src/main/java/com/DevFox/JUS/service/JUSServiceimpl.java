@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.DevFox.JUS.domain.BoardDTO;
+import com.DevFox.JUS.domain.RecommendDTO;
+import com.DevFox.JUS.domain.RequestDTO;
 import com.DevFox.JUS.domain.UserDTO;
 import com.DevFox.JUS.mapper.JUSMapper;
 
@@ -73,5 +75,53 @@ public class JUSServiceimpl implements JUSService {
 	@Override
 	public BoardDTO viewDTO(String board_idx) {
 		return mapper.viewDTO(board_idx);
+	}
+	
+	@Override
+	public int request_orderMax(String board_idx) {
+		return mapper.request_orderMax(board_idx);
+	}
+	
+	@Override
+	public void board_request_update(int request_order, String board_idx) {
+		mapper.board_request_update(request_order, board_idx);
+		
+	}
+	
+	@Override
+	public void Requestinsert(RequestDTO dto) {
+		mapper.Requestinsert(dto);
+	}
+	
+	@Override
+	public int ViewRequestOK(String board_idx, String user_name) {
+		return mapper.ViewRequestOK(board_idx, user_name);
+	}
+	
+	@Override
+	public void RequestDe(String board_idx, String request_user) {
+		mapper.RequestDe(board_idx, request_user);
+		
+	}
+	
+	@Override
+	public int recommendMax(String board_idx) {
+		return mapper.recommendMax(board_idx);
+	}
+	
+	@Override
+	public void board_recommend_update(int recommend_order, String board_idx) {
+		mapper.board_recommend_update(recommend_order, board_idx);
+	}
+	
+	@Override
+	public void Recommendinsert(RecommendDTO dto) {
+		mapper.Recommendinsert(dto);
+		
+	}
+	
+	@Override
+	public int recommendOK(String board_idx, String recommend_user) {
+		return mapper.recommendOK(board_idx, recommend_user);
 	}
 }

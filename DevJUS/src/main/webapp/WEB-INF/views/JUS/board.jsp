@@ -51,7 +51,7 @@
                     <div class="col mb-5">
                         <div class="card h-100">
                             <!-- Product image-->
-                            <img class="card-img-top" src="/resources/css/uploadimg/${board.board_poto_new }" alt="..." />
+                            <img class="card-img-top" src="/resources/css/uploadimg/${board.board_poto_new}" alt="..." style="width:100%; height:100%"/>
                             <!-- Product details-->
                             <div class="card-body p-4">
                                 <div class="text-center">
@@ -63,7 +63,7 @@
                             </div>
                             <!-- Product actions-->
                             <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="view?board_idx=${board.board_idx}">신청</a></div>
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="view?board_idx=${board.board_idx}&user_name=${user.user_name}">신청</a></div>
                             </div>
                         </div>
                     </div>

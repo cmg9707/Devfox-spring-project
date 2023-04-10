@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,6 +30,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.DevFox.JUS.domain.BoardDTO;
+import com.DevFox.JUS.domain.RecommendDTO;
+import com.DevFox.JUS.domain.RequestDTO;
 import com.DevFox.JUS.domain.UserDTO;
 import com.DevFox.JUS.service.JUSService;
 
@@ -201,7 +204,7 @@ public class JUSController {
 		Random random = new Random();
 		int board_poto_Count = random.nextInt(888888)+111111;
 		String board_poto_new = newpotoname[0]+board_poto_Count+"."+newpotoname[1];
-		FileOutputStream fos = new FileOutputStream("C:/JUS/work/DevfoxProject/DevJUS/src/main/webapp/resources/css/uploadimg/"+board_poto_new);
+		FileOutputStream fos = new FileOutputStream("C:/JSU/Devfox-spring-project/DevJUS/src/main/webapp/resources/css/uploadimg/"+board_poto_new);
 		 // 파일 저장할 경로 + 파일명을 파라미터로 넣고 fileOutputStream 객체 생성하고
 		InputStream is = file.getInputStream();
 		 // file로 부터 inputStream을 가져온다.
@@ -233,24 +236,72 @@ public class JUSController {
 	}
 	
 	@GetMapping("view")
-	public void Getview(@RequestParam("board_idx") String board_idx, Model model) {
-		
+	public void Getview(@RequestParam("board_idx") String board_idx, @RequestParam("user_name") String user_name,Model model) {
+		model.addAttribute("reqOK",service.ViewRequestOK(board_idx, user_name));
 		model.addAttribute("board", service.viewDTO(board_idx));
+		model.addAttribute("recooOK", service.recommendOK(board_idx, user_name));
 		log.info("Getview call........");
 
 	}
-	
+	@Transactional
 	@ResponseBody
 	@PostMapping("view_request")
-	public void View_Request(@RequestParam("user_name") String user_name,
+	public int View_Request(@RequestParam("user_name") String user_name,
 							 @RequestParam("board_idx") String board_idx,
 							 @RequestParam("request_user") String request_user) {
 		
 		log.info("View_Request call........"+user_name);
 		log.info("View_Request call........"+board_idx);
 		log.info("View_Request call........"+request_user);
+		int request_order = service.request_orderMax(board_idx)+1; // 글의 신청자수
+		service.board_request_update(request_order, board_idx);
+		RequestDTO dto = new RequestDTO();
+		dto.setBoard_idx(Integer.parseInt(board_idx)); //글 넘버
+		dto.setUser_name(user_name); // 글 주인
+		dto.setRequest_user(request_user); // 신청자
+		dto.setRequest_order(request_order);//신청한 수
+		service.Requestinsert(dto);
+		return request_order;
+	}
+	
+	@Transactional
+	@ResponseBody
+	@PostMapping("view_request_m")
+	public int View_Request_m(
+							 @RequestParam("board_idx") String board_idx,
+							 @RequestParam("request_user") String request_user) {
 		
-		//여기다가 신청자 갱신
+		
+		service.RequestDe(board_idx, request_user);// 신청 취소
+		int request_order = service.request_orderMax(board_idx)-1; // 글의 신청자수
+		
+		service.board_request_update(request_order, board_idx);
+		
+		return request_order;
+	}
+	
+	@Transactional
+	@ResponseBody
+	@PostMapping("view_recommend")
+	public int View_recommend(@RequestParam("user_name") String user_name,
+							 @RequestParam("board_idx") String board_idx,
+							 @RequestParam("recommend_user") String recommend_user) {
+		log.info("view_recommend call........");
+		
+		int recommendOK = service.recommendOK(board_idx, recommend_user); // 추천 눌렀는지 확인
+		if(recommendOK == 0) {
+			int recommend_order = service.recommendMax(board_idx)+1; // 글 조회수
+			service.board_recommend_update(recommend_order, board_idx);
+			RecommendDTO dto = new RecommendDTO();
+			dto.setBoard_idx(Integer.parseInt(board_idx)); //글 넘버
+			dto.setUser_name(user_name); // 글 주인
+			dto.setRecommend_user(recommend_user); // 신청자
+			service.Recommendinsert(dto);
+			return recommend_order;
+		}else {
+			return 0;
+		}
+		
 		
 	}
 }
