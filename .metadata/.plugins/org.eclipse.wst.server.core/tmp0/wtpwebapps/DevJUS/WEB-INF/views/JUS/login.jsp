@@ -71,6 +71,7 @@
 		 var user_pass = $('#user_pass').val();
 		 console.log(user_id);
 		 console.log(user_pass);
+		 
 			$.ajax({
 				url : "login_Chk",
 				type: "Get",

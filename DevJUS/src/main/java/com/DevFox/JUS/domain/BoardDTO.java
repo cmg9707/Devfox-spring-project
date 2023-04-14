@@ -18,6 +18,5 @@ public class BoardDTO {
 	private String board_date;//作成時間
 	private int board_recommend;//推薦
 	private String board_days;//一週間の何日
-	private int board_hits;
-	private int request_order;
+	private int request_order;//申込者
 }

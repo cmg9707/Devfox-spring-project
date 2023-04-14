@@ -117,8 +117,7 @@
 			        dataType: "text",
 			        data: { user_id: user_id },
 			        success: function(data) {
-			        	//console.log("성공");
-			        	//console.log(lengt);
+			        	
 			        	console.log(data);
 			        	if(lengt <=3){
 			        		$('.user-id-error-message').text('3글자 이하는 안됩니다.').css('color', 'red');
@@ -170,8 +169,8 @@
 				      }
 				  })
 				}else{
-			  		$('.user-name-error-message').text('아이디를 입력하세요.').css('color', 'red');
-			  		user_id_check = 0;
+			  		$('.user-name-error-message').text('닉네임를 입력하세요.').css('color', 'red');
+			  		user_name_check = 0;
 				}
 		})
 			$("#user_pass").on("input", function() {
@@ -240,7 +239,7 @@
 					return
 				}
 				if(user_mail_check == 0){
-					alert("비밀번호를 확인하세요")
+					alert("이메일을 확인하세요")
 					$('#user_mail').focus()
 					return
 				}

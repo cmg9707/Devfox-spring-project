@@ -19,9 +19,18 @@
 	<!-- Navigation-->
         <nav class="navbar navbar-light bg-light static-top">
             <div class="container">
-                <a class="navbar-brand" href="index">모임나라 + ${user.user_id}</a>
+                <a class="navbar-brand" href="index">모임나라</a>
                 <div style="text-align: right;">
-                <a href="board" >게시판으로</a>
+                    <c:if test = "${user.user_power == 'x'}"> <!-- user -->
+						<a href="info" ><img src="/resources/css/img/user.png" alt="" style="width: 10%;"></a>
+						${user.user_name}
+						<a href="index" ><img src="/resources/css/img/logout.png" alt="" style="width: 10%;"></a>
+					</c:if>
+					<c:if test = "${user.user_power == 'o'}"> <!-- admin -->
+						<a href="info" >관리자</a>
+						<a href="index" ><img src="/resources/css/img/logout.png" alt="" style="width: 10%;"></a>
+					</c:if>
+                		<a href="board" >게시판으로</a>
                 </div>
             </div>
         </nav>

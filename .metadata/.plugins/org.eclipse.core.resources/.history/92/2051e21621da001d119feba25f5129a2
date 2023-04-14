@@ -1,0 +1,528 @@
+package com.DevFox.JUS.controller;
+
+
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+
+import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.DevFox.JUS.domain.BoardDTO;
+import com.DevFox.JUS.domain.CommentDTO;
+import com.DevFox.JUS.domain.RecommendDTO;
+import com.DevFox.JUS.domain.RequestDTO;
+import com.DevFox.JUS.domain.UserDTO;
+import com.DevFox.JUS.service.JUSService;
+
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor // 自動生成者
+@Controller 
+@RequestMapping("JUS")
+public class JUSController {
+	private static final Logger log=
+				LoggerFactory.getLogger(JUSController.class);
+	@GetMapping("index")
+	public void mainIndex() {
+		log.info("index.jsp call........");
+	}
+	
+	@Autowired
+	private JUSService service; //service 依存性
+	
+	@Autowired
+	private JavaMailSender mailSender;
+	
+	@GetMapping("join")
+	public void join_from() {
+		log.info("join_from() call........");
+	}
+	
+	
+	@ResponseBody
+	@PostMapping(value = "user_idChk" ,  produces = "application/text; charset=UTF-8" )
+	public String user_idCh(@RequestBody String user_id) {
+		log.info("user_idCh( call........"+user_id);
+		String[] parts = user_id.split("=");
+		String username = parts[0];
+		//log.info(username);
+		String user_value = parts[1];
+		//String ch = "존재하는 아이디입니다";
+		//System.out.print(service.User_Chk(userId));
+		String user_id_ok = String.valueOf(service.User_Chk(username , user_value));
+		return user_id_ok;
+	}
+	
+	
+	@ResponseBody
+	@PostMapping(value = "user_nameChk" ,  produces = "application/text; charset=UTF-8" )
+	public String user_nameCh(@RequestBody String user_name) throws UnsupportedEncodingException {
+		String[] parts = user_name.split("=");
+		
+		String username = parts[0];
+		
+		String user_value_decoded = parts[1];
+		String user_value = URLDecoder.decode(user_value_decoded, "UTF-8");
+		log.info("user_idCh( call........" +user_value);
+		//String ch = "존재하는 아이디입니다";
+		//System.out.print(service.User_Chk(userId));
+		String user_name_ok = String.valueOf(service.User_Chk(username , user_value));
+		return user_name_ok;
+	}
+	
+	@ResponseBody
+	@GetMapping(value="user_mailck")
+	public String user_mailCh(@RequestParam("user_mail") String email) {
+		log.info("user_mailCh( call........"+email);
+		//인증번호 생성
+		Random random = new Random();
+		int checkNum = random.nextInt(888888)+111111;
+		log.info("인증번호" + checkNum);
+		
+		//이메일 보내기
+		String setFrom = "cmg9707@naver.com"; //보내주는메일
+		String toMail = email;// 받는메일
+		String title = "회원가입 인증 메일 입니다."; //제목
+		String content = 
+				"인증 번호는 " + checkNum + "입니다"+"<br>"+
+		"인증번호를 입력해서 인증해 주세요."; // 내용
+		//이메일 전송 코드
+		try {
+			MimeMessage message = mailSender.createMimeMessage();
+			MimeMessageHelper helper = new MimeMessageHelper(message,true,"utf-8");
+			helper.setFrom(setFrom);
+			helper.setTo(toMail);
+			helper.setSubject(title);
+			helper.setText(content,true);
+			mailSender.send(message);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		String num = Integer.toString(checkNum);
+		
+		return num;
+	}
+	
+	@PostMapping("index")
+	public void PostIndex(UserDTO dto) {
+		
+		log.info("Postindex.jsp call........");
+		String user_id = dto.getUser_id();
+		String user_name = dto.getUser_name();
+		String user_pass = dto.getUser_pass();
+		String user_mail = dto.getUser_mail();
+		String user_birth = dto.getUser_birth();
+		//System.out.print(user_id+","+user_name+","+user_pass+","+user_mail+","+user_birth );
+		service.User_join(dto);
+		
+	}
+	
+	@GetMapping("login")
+	public void Getlogin() {
+		
+		log.info("Getlogin.jsp call........");
+
+	}
+	@ResponseBody
+	@GetMapping("login_Chk")
+	public String Login_chk(@RequestParam("user_id") String user_id ,@RequestParam("user_pass") String user_pass
+			,HttpServletRequest request, HttpServletResponse response,Model model) {
+		log.info("Login_chk.jsp call........" + user_id);
+	    log.info("Login_chk.jsp call........" + user_pass);
+
+	    int id_c = service.User_login_id(user_id);
+
+	    if (id_c == 0) { // 아이디가 존재하지 않을 때
+	        return "0";
+	    } else { // 아이디가 존재할 때
+	        int pass_c = service.User_login_idpass(user_id, user_pass);
+
+	        if (pass_c == 0) { // 비밀번호가 틀렸을 때
+	            return "1";
+	        } else { // 로그인 성공
+	        	UserDTO dto = service.user_select(user_id);
+	        	HttpSession session = request.getSession();// 세션 생성
+	        	session.setAttribute("user", dto);
+	        	session.setMaxInactiveInterval(1800);//세션 유지시간 1800초
+	        	model.addAttribute("user" ,session );
+	            return "2";
+	        }
+	        
+	    }
+
+	}
+	
+	//boardPage go
+	@GetMapping("board")
+	public void Getboard(Model model,@RequestParam("nPage") int nPage) {
+		model.addAttribute("nPage", nPage);
+		log.info("Getboard call........");
+
+	}
+	//board list
+	@ResponseBody
+	@GetMapping("boardList")
+	public List<BoardDTO> ajaxboard(@RequestParam("nPage") int nPage) {
+		int startPage = (nPage - 1) * 8; //시작 번호
+		List<BoardDTO> list =  service.boardList(startPage);
+
+		log.info("ajaxboard call........");
+		return list;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	@GetMapping("writing")
+	public void Getwriting() {
+		
+		log.info("Getwriting call........");
+
+	}
+	//글 등록
+	@PostMapping("writing")
+	public String Postwriting(@RequestParam("board_title") String board_title,
+			@RequestParam("board_content") String board_content,
+			@RequestParam("user_name") String user_name,
+			@RequestParam("board_limit") String board_limit,
+			@RequestParam("board_address") String board_address,
+			@RequestParam("board_days") String board_days,
+			@RequestParam("board_end") String board_end,
+			@RequestParam("board_period_start") String board_period_start,
+			@RequestParam("board_period_end") String board_period_end
+			,@RequestParam("board_poto") MultipartFile file) throws Exception{
+		
+		log.info("Getwriting call........"+ file.getOriginalFilename()); 
+		String board_poto = file.getOriginalFilename();//파일 원래 이름
+		String[] newpotoname = board_poto.split("\\.");//split()은 정규문자열로 나타내는데 .은 모든 문자열이라는 뜻으로 .으로 나누기 위해서는 \를 추가시켜서 문자그대로 인식시켜야한다.
+		Random random = new Random();
+		int board_poto_Count = random.nextInt(888888)+111111;
+		String board_poto_new = newpotoname[0]+board_poto_Count+"."+newpotoname[1];
+		FileOutputStream fos = new FileOutputStream("C:/JUS/work/DevfoxProject/.metadata/.plugins/org.eclipse.wst.server.core/uploadimg/"+board_poto_new);
+		 // 파일 저장할 경로 + 파일명을 파라미터로 넣고 fileOutputStream 객체 생성하고
+		InputStream is = file.getInputStream();
+		 // file로 부터 inputStream을 가져온다.
+		int readCount = 0;
+        byte[] buffer = new byte[1024];
+        // 파일을 읽을 크기 만큼의 buffer를 생성하고
+        while ((readCount = is.read(buffer)) != -1) {
+          //  파일에서 가져온 fileInputStream을 설정한 크기 (1024byte) 만큼 읽고
+            
+         fos.write(buffer, 0, readCount);
+          // 위에서 생성한 fileOutputStream 객체에 출력하기를 반복한다
+        };
+        
+        BoardDTO dto = new BoardDTO();
+		dto.setBoard_title(board_title);
+		dto.setBoard_content(board_content);
+		dto.setUser_name(user_name);
+		dto.setBoard_limit(Integer.parseInt(board_limit));
+		dto.setBoard_address(board_address);
+		dto.setBoard_days(board_days);
+		dto.setBoard_end(board_end);
+		dto.setBoard_period_start(board_period_start);
+		dto.setBoard_period_end(board_period_end);
+		dto.setBoard_poto(board_poto);// 원본이름
+		dto.setBoard_poto_new(board_poto_new);//새로운이름;
+		
+		service.board_writing(dto);
+		
+		return "redirect:board?nPage="+1;
+	}
+	
+	@GetMapping("view")
+	public void Getview(@RequestParam("board_idx") String board_idx, @RequestParam("user_name") String user_name,Model model) {
+		model.addAttribute("reqOK",service.ViewRequestOK(board_idx, user_name));
+		model.addAttribute("board", service.viewDTO(board_idx));
+		model.addAttribute("recooOK", service.recommendOK(board_idx, user_name));
+		log.info("Getview call........");
+
+	}
+	@Transactional
+	@ResponseBody
+	@PostMapping("view_request")
+	public int View_Request(@RequestParam("user_name") String user_name,
+							 @RequestParam("board_idx") String board_idx,
+							 @RequestParam("request_user") String request_user) {
+		
+		log.info("View_Request call........"+user_name);
+		log.info("View_Request call........"+board_idx);
+		log.info("View_Request call........"+request_user);
+		int request_order = service.request_orderMax(board_idx)+1; // 글의 신청자수
+		service.board_request_update(request_order, board_idx);
+		RequestDTO dto = new RequestDTO();
+		dto.setBoard_idx(Integer.parseInt(board_idx)); //글 넘버
+		dto.setUser_name(user_name); // 글 주인
+		dto.setRequest_user(request_user); // 신청자
+		dto.setRequest_order(request_order);//신청한 수
+		service.Requestinsert(dto);
+		return request_order;
+	}
+	
+	@Transactional
+	@ResponseBody
+	@PostMapping("view_request_m")
+	public int View_Request_m(
+							 @RequestParam("board_idx") String board_idx,
+							 @RequestParam("request_user") String request_user) {
+		
+		
+		service.RequestDe(board_idx, request_user);// 신청 취소
+		int request_order = service.request_orderMax(board_idx)-1; // 글의 신청자수
+		
+		service.board_request_update(request_order, board_idx);
+		
+		return request_order;
+	}
+	
+	@Transactional
+	@ResponseBody
+	@PostMapping("view_recommend")
+	public int View_recommend(@RequestParam("user_name") String user_name,
+							 @RequestParam("board_idx") String board_idx,
+							 @RequestParam("recommend_user") String recommend_user) {
+		log.info("view_recommend call........");
+		
+		int recommendOK = service.recommendOK(board_idx, recommend_user); // 추천 눌렀는지 확인
+		if(recommendOK == 0) {
+			int recommend_order = service.recommendMax(board_idx)+1; // 글 조회수
+			service.board_recommend_update(recommend_order, board_idx);
+			RecommendDTO dto = new RecommendDTO();
+			dto.setBoard_idx(Integer.parseInt(board_idx)); //글 넘버
+			dto.setUser_name(user_name); // 글 주인
+			dto.setRecommend_user(recommend_user); // 신청자
+			service.Recommendinsert(dto);
+			return recommend_order;
+		}else {
+			return 0;
+		}
+		
+		
+	}
+	//댓글 저장
+	@ResponseBody
+	@PostMapping("reTestComment")
+	public List<CommentDTO> reTestComment(CommentDTO dto) {
+		
+		log.info(dto.getBoard_idx()+"-"+dto.getUser_name()+"-"+dto.getComment_content());
+		dto.setComment_idx(service.Comment_idxMax()+1);
+		dto.setComment_grp(service.Comment_idxMax()+1);
+		dto.setComment_grps(1);
+		dto.setComment_nb(service.Comment_idxMax()+1);
+		service.reComment_insert(dto);
+		List<CommentDTO> list = service.CommentList();
+		return list;
+	}
+	
+	//대댓글 저장
+	@ResponseBody
+	@PostMapping("rereTestComment")
+	public Map<String, Object> rereTestComment(CommentDTO dto ,@RequestParam("nowPage") int nowPage) {
+		
+		dto.setComment_grp(dto.getComment_idx());// 댓글 그룹 
+		int nb = dto.getComment_nb();//댓글 고유 번호
+		int comment_grps =  service.COgrps(nb)+1; //댓글 순서
+		dto.setComment_grps(comment_grps);
+		dto.setComment_nb(service.Comment_idxMax()+1);
+		if(comment_grps>2) {
+			service.UPComment(dto);// 대댓글 들어가기전에 미리 순서 바꿔놓기
+		}else {
+			dto.setComment_grps(service.GrpsMax(dto.getComment_grp())+1);
+		}
+		
+		service.rereComment_insert(dto);//대댓글 등록
+		int startPage = (nowPage - 1) * 10;
+		Map<String, Object> response = new HashMap<>();
+		List<CommentDTO> startList = service.CommentPage(startPage);
+		List<CommentDTO> list = service.CommentList();
+		int size = list.size();
+		
+	    response.put("size", size);
+	    response.put("startList", startList);
+		
+		return response;
+	}
+	//댓글 리스트
+	@GetMapping("CommentList")
+	@ResponseBody
+	public List<CommentDTO> CommentList() {
+		List<CommentDTO> list = service.CommentList();
+		return list;
+	}
+	
+	//댓글 삭제
+	@ResponseBody
+	@PostMapping("CommentDel")
+	public Map<String, Object> CommentDel(@RequestParam("comment_nb") String comment_nb, @RequestParam("nowPage") int nowPage) {	
+		
+		service.CommentDele(comment_nb);
+		
+		int startPage = (nowPage - 1) * 10;
+		Map<String, Object> response = new HashMap<>();
+		List<CommentDTO> startList = service.CommentPage(startPage);
+		List<CommentDTO> list = service.CommentList();
+		int size = list.size();
+		
+	    response.put("size", size);
+	    response.put("startList", startList);
+		
+		return response;
+	}
+	
+	//댓글 수정
+	@ResponseBody
+	@PostMapping("CommentMod")
+	public Map<String, Object> CommentMod(CommentDTO dto , @RequestParam("nowPage") int nowPage) {	
+		log.info("comment_grps"+dto.getComment_content());
+		log.info("comment_grps"+dto.getComment_nb());
+		service.CommentMode(dto);
+		
+		int startPage = (nowPage - 1) * 10;
+		Map<String, Object> response = new HashMap<>();
+		List<CommentDTO> startList = service.CommentPage(startPage);
+		List<CommentDTO> list = service.CommentList();
+		int size = list.size();
+		
+	    response.put("size", size);
+	    response.put("startList", startList);
+	    
+	    return response;
+	}
+	
+	//댓글 페이징
+	@GetMapping("commentPage")
+	@ResponseBody
+	public Map<String, Object> CommentPage(@RequestParam("startPage") int startPage ) {
+		
+		Map<String, Object> response = new HashMap<>();
+		List<CommentDTO> list = service.CommentPage(startPage);
+		List<CommentDTO> Pagelist = service.CommentList();
+		int size = Pagelist.size();
+		
+	    response.put("size", size);
+	    response.put("list", list);
+		return response;
+	}
+	
+	//댓글 입력 마지막리스트
+	@GetMapping("Commint_insert_list")
+	@ResponseBody
+	public List<CommentDTO> Commint_insert_list(Model model) {
+		List<CommentDTO> list = service.CommentList();
+		int size = list.size();
+		log.info("size " + size );
+		int startPage = (int) Math.ceil(size / 10.);
+		log.info("intstartPage " + startPage );
+		startPage = (startPage - 1) * 10;
+		log.info("startPage " + startPage );
+		list = service.CommentPage(startPage);
+		model.addAttribute("size", size);
+		return list;
+	}
+	
+	@GetMapping("modify")
+	public void Getmodify(Model model , @RequestParam("board_idx")int board_idx){
+		log.info("Getmodify"+board_idx);
+		BoardDTO board = service.BoardmodifyList(board_idx);
+		
+		model.addAttribute("board", board);
+	}
+	
+	//글 수정
+	@PostMapping("modify")
+	public String Postmodify(@RequestParam("board_idx") int board_idx,
+			@RequestParam("board_title") String board_title,
+			@RequestParam("board_content") String board_content,
+			@RequestParam("user_name") String user_name,
+			@RequestParam("board_limit") String board_limit,
+			@RequestParam("board_address") String board_address,
+			@RequestParam("board_days") String board_days,
+			@RequestParam("board_end") String board_end,
+			@RequestParam("board_period_start") String board_period_start,
+			@RequestParam("board_period_end") String board_period_end,
+			@RequestParam("board_o_poto") String board_o_poto
+			,@RequestParam("board_poto") MultipartFile file) throws Exception{
+		
+		log.info("Getwriting call........"+ file.getOriginalFilename());
+		String old_poto = board_o_poto; //지금 폴더에 저장되어있는 파일 이름
+		String board_poto = file.getOriginalFilename();//파일 원래 이름
+		String[] newpotoname = board_poto.split("\\.");//split()은 정규문자열로 나타내는데 .은 모든 문자열이라는 뜻으로 .으로 나누기 위해서는 \를 추가시켜서 문자그대로 인식시켜야한다.
+		Random random = new Random();
+		int board_poto_Count = random.nextInt(888888)+111111;
+		String board_poto_new = newpotoname[0]+board_poto_Count+"."+newpotoname[1];
+		String oldPath = "C:/JUS/work/DevfoxProject/.metadata/.plugins/org.eclipse.wst.server.core/uploadimg/" + old_poto;
+		File oldFile = new File(oldPath);
+		if (oldFile.exists()) {//기존 파일삭제
+		    oldFile.delete();
+		}
+		
+		FileOutputStream fos = new FileOutputStream("C:/JUS/work/DevfoxProject/.metadata/.plugins/org.eclipse.wst.server.core/uploadimg/"+board_poto_new);
+		 // 파일 저장할 경로 + 파일명을 파라미터로 넣고 fileOutputStream 객체 생성하고
+		InputStream is = file.getInputStream();
+		 // file로 부터 inputStream을 가져온다.
+		int readCount = 0;
+        byte[] buffer = new byte[1024];
+        // 파일을 읽을 크기 만큼의 buffer를 생성하고
+        while ((readCount = is.read(buffer)) != -1) {
+          //  파일에서 가져온 fileInputStream을 설정한 크기 (1024byte) 만큼 읽고
+            
+         fos.write(buffer, 0, readCount);
+          // 위에서 생성한 fileOutputStream 객체에 출력하기를 반복한다
+        };
+        BoardDTO dto = new BoardDTO();
+        dto.setBoard_idx(board_idx);
+		dto.setBoard_title(board_title);
+		dto.setBoard_content(board_content);
+		dto.setUser_name(user_name);
+		dto.setBoard_limit(Integer.parseInt(board_limit));
+		dto.setBoard_address(board_address);
+		dto.setBoard_days(board_days);
+		dto.setBoard_end(board_end);
+		dto.setBoard_period_start(board_period_start);
+		dto.setBoard_period_end(board_period_end);
+		dto.setBoard_poto(board_poto);// 원본이름
+		dto.setBoard_poto_new(board_poto_new);// 새이름
+		//수정
+		service.Boardmodif(dto);
+		
+		return "redirect:view?board_idx="+board_idx+"&user_name="+user_name;
+	}
+	
+	//글 삭제
+	@GetMapping("delete")
+	public String Postdelete(@RequestParam("board_idx") int board_idx) {
+		
+		service.BoardDelete(board_idx);
+		return "redirect:board";
+	}
+}

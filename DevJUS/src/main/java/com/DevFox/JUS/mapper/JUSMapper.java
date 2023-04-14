@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.DevFox.JUS.domain.BoardDTO;
+import com.DevFox.JUS.domain.CommentDTO;
 import com.DevFox.JUS.domain.RecommendDTO;
 import com.DevFox.JUS.domain.RequestDTO;
 import com.DevFox.JUS.domain.UserDTO;
@@ -40,7 +41,7 @@ public interface JUSMapper {
 	public void board_writing(BoardDTO dto);
 	
 	//board List
-	public List<BoardDTO> boardList();
+	public List<BoardDTO> boardList(int startPage);
 	
 	//view
 	public BoardDTO viewDTO(String board_idx);
@@ -71,4 +72,59 @@ public interface JUSMapper {
 	
 	//recommendOK
 	public int recommendOK(@Param("board_idx")String board_idx , @Param("recommend_user")String recommend_user);
+
+	//댓글 부모 idx +1
+	public int Comment_idxMax();
+	
+	//댓글등록
+	public void reComment_insert(CommentDTO dto);
+	
+	//댓글 리스트
+	public List<CommentDTO> CommentList();
+	
+	//댓글 순서 구하기
+	public int COgrps(int nb);
+	
+	//댓글 순서 업데이트
+	public void UPComment(CommentDTO dto);
+	
+	//대댓글 등록
+	public void rereComment_insert(CommentDTO dto);
+	
+	//그룹의 대댓글  최대수
+	public int GrpsMax(int comment_grp);
+	
+	//댓글 삭제
+	public void CommentDele(String comment_nb);
+	
+	//댓글 수정
+	public void CommentMode(CommentDTO dto);
+	
+	//댓글 페이지
+	public List<CommentDTO> CommentPage(int startPage);
+	
+	//특정 idx 글
+	public BoardDTO BoardmodifyList(int board_idx);
+	
+	//글 수정
+	public void Boardmodif(BoardDTO dto);
+	
+	//글 삭제
+	public void BoardDelete(int board_idx);
+	
+	//특정 유저글 수
+	public int BoardUser_Count(String name);
+	
+	//특정글 list
+	public List<BoardDTO> BoardUser_list(@Param("nameArr")List<String> nameArr,
+			@Param("dataArr")List<String> dataArr, @Param("startPage")int startPage);
+	
+	//추천순 list
+	public List<BoardDTO> UPpageListCommend(int startPage);
+	
+	//비밀번호 변경
+	public void User_pass_ch(UserDTO dto);
+	
+	//내글 확인
+	public List<BoardDTO> infotextList(String user_name);
 }

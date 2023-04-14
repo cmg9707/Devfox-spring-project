@@ -12,6 +12,10 @@
 		select count(*) from board
 	</select>
 	
+	<select id="Comment_idxMax" resultType="int">
+		select count(*) from comment
+	</select>
+	
 	<select id="User_Chk" resultType="int">
 		select count(*) from user where ${username} = #{user_value}
 	</select>
@@ -42,7 +46,7 @@
 	</insert>
 	
 	<select id="boardList" resultType="com.DevFox.JUS.domain.BoardDTO">
-		select * from board
+		select * from board order by board_idx desc LIMIT #{statrPage}, 8;
 	</select>
 	
 	<select id="viewDTO" resultType="com.DevFox.JUS.domain.BoardDTO">
@@ -87,7 +91,94 @@
 		select count(*) from recommend where board_idx = #{board_idx} and recommend_user = #{recommend_user};
 	</select>
 	
+	<insert id="reComment_insert" >
+		insert into comment(comment_idx,board_idx , user_name , comment_content,comment_grp,comment_grps,comment_nb)
+			value(#{comment_idx},#{board_idx},#{user_name},#{comment_content},#{comment_grp},#{comment_grps},#{comment_nb})
+	</insert>
+	
+	<select id="CommentList" resultType="com.DevFox.JUS.domain.CommentDTO">
+		SELECT * FROM comment ORDER BY comment_idx ,comment_grps
+	</select>
+	
+	<select id="COgrps" resultType="int">
+		select comment_grps from comment where comment_nb = #{nb}
+	</select>
+	
+	<update id="UPComment">
+		update comment set comment_grps = comment_grps +1 
+			where comment_idx = #{comment_idx} and comment_grps >= #{comment_grps}
+	</update>
 
+	<insert id="rereComment_insert">
+		insert into comment(comment_idx,user_name,board_idx,comment_grp,comment_grps,
+		comment_nb,comment_content)
+		value(#{comment_idx},#{user_name},#{board_idx},#{comment_grp},#{comment_grps},
+		#{comment_nb},#{comment_content})
+	</insert>
+	
+	<select id="GrpsMax" resultType="int">
+		select count(*) from comment where comment_idx = #{comment_idx};
+	</select>
+	
+	<update id="CommentDele">
+		update comment set comment_content = '삭제되었습니다' 
+			where comment_nb = #{comment_nb}
+	</update>
+	
+	<update id="CommentMode">
+		update comment set comment_content = #{comment_content}
+			where comment_nb = #{comment_nb}
+	</update>
+	
+	<select id="CommentPage" resultType="com.DevFox.JUS.domain.CommentDTO">
+		SELECT * FROM comment ORDER BY comment_idx, comment_grps
+		LIMIT #{statrPage}, 10
+	</select>
+	
+	<select id="BoardmodifyList" resultType="com.DevFox.JUS.domain.BoardDTO">
+		select * from board where board_idx = #{board_idx}
+	</select>
+	
+	<update id="Boardmodif" >
+		update board set board_idx = #{board_idx}, board_content = #{board_content},
+		user_name = #{user_name},board_limit = #{board_limit},board_address = #{board_address},
+		board_days = #{board_days},board_end = #{board_end},board_period_start = #{board_period_start},
+		board_period_end = #{board_period_end},board_poto = #{board_poto},board_poto_new = #{board_poto_new},
+		board_title = #{board_title}
+		where board_idx = #{board_idx}
+	</update>
+	
+	<delete id="BoardDelete">
+		delete from board where board_idx =  #{board_idx}
+	</delete>
+	
+	<select id="BoardUser_Count" resultType="int">
+		select count(*) from board where user_name = #{name}
+	</select>
+	
+	<select id="BoardUser_list" resultType="com.DevFox.JUS.domain.BoardDTO">
+		select * from board where
+   	  	<foreach collection="nameArr" item="name" separator=" AND ">
+     	   	<foreach collection="dataArr" item="value" index="idx">
+         	   	<if test="nameArr[idx] == name">
+         	      	 ${name} = #{value}
+         	   	</if>
+        		</foreach>
+    		</foreach>
+    			ORDER BY board_idx LIMIT #{startPage}, 8 
+	</select>
+	
+	<select id="UPpageListCommend" resultType="com.DevFox.JUS.domain.BoardDTO">
+		select * from board order by board_recommend desc LIMIT #{startPage}, 8
+	</select>
+	
+	<update id="User_pass_ch">
+		update user set user_pass = #{user_pass} where user_id = #{user_id};
+	</update>
+	
+	<select id="infotextList" resultType="com.DevFox.JUS.domain.BoardDTO">
+		select * from board where user_name = #{user_name}
+	</select>
 </mapper>     
                   
                    

@@ -1,0 +1,5 @@
+package com.DevFox.JUS.domain;
+
+public class Board_search {
+
+}

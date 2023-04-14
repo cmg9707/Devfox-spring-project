@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+                        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.DevFox.JUS.mapper.JUSMapper">
+	<select id="User_Count" resultType="int">
+		select count(*) from user
+	</select>
+	
+	<select id="Board_Count" resultType="int">
+		select count(*) from board
+	</select>
+	
+	<select id="Comment_idxMax" resultType="int">
+		select count(*) from comment
+	</select>
+	
+	<select id="User_Chk" resultType="int">
+		select count(*) from user where ${username} = #{user_value}
+	</select>
+	
+	<insert id="User_join">
+		insert into user(user_id,user_name,user_pass,user_birth,user_mail)
+				value(#{user_id},#{user_name},#{user_pass},#{user_birth}, #{user_mail});
+	</insert>
+	
+	<select id="User_login_id" resultType="int">
+		select count(*) from user where user_id = #{user_id}
+	</select>
+	
+	<select id="User_login_idpass" resultType="int">
+		select count(*) from user where user_id = #{user_id} and user_pass = #{user_pass}
+	</select>
+	
+	<select id="user_select" resultType="com.DevFox.JUS.domain.UserDTO">
+		select * from user where user_id = #{user_id}
+	</select>
+	
+	<insert id="board_writing">
+		insert into board(user_name,board_title,board_content,board_poto,board_poto_new,
+		board_address,board_period_start,board_period_end,board_end,board_limit,board_days)
+				value(#{user_name},#{board_title},#{board_content},#{board_poto},
+				#{board_poto_new},#{board_address},#{board_period_start},#{board_period_end},
+				#{board_end},#{board_limit},#{board_days});
+	</insert>
+	
+	<select id="boardList" resultType="com.DevFox.JUS.domain.BoardDTO">
+		select * from board
+	</select>
+	
+	<select id="viewDTO" resultType="com.DevFox.JUS.domain.BoardDTO">
+		select * from board  where board_idx = #{board_idx}
+	</select>
+	
+	<select id="request_orderMax" resultType="int">
+		select max(request_order) from board where board_idx = #{board_idx}
+	</select>
+	
+	<update id="board_request_update">
+		update board set request_order = #{request_order} where board_idx = #{board_idx};
+	</update>
+	
+	<insert id="Requestinsert">
+		insert into request(user_name,board_idx,request_user,request_order)
+			value(#{user_name},#{board_idx},#{request_user},#{request_order})
+	</insert>
+	
+	<select id="ViewRequestOK" resultType="int">
+		select count(*) from request where board_idx =#{board_idx} and request_user = #{user_name};
+	</select>
+	
+	<delete id="RequestDe">
+		delete from request where board_idx = #{board_idx} and request_user = #{request_user};
+	</delete>
+	
+	<select id="recommendMax" resultType="int">
+		select max(board_recommend) from board where board_idx = #{board_idx}
+	</select>
+	
+	<update id="board_recommend_update">
+		update board set board_recommend = #{recommend_order} where board_idx = #{board_idx};
+	</update>
+	
+	<insert id="Recommendinsert">
+		insert into recommend(user_name, board_idx,recommend_user)
+			value(#{user_name},#{board_idx},#{recommend_user})
+	</insert>
+	
+	<select id="recommendOK" resultType="int">
+		select count(*) from recommend where board_idx = #{board_idx} and recommend_user = #{recommend_user};
+	</select>
+	
+	<insert id="reComment_insert" >
+		insert into comment(comment_idx,board_idx , user_name , comment_content,comment_grp,comment_grps,comment_nb)
+			value(#{comment_idx},#{board_idx},#{user_name},#{comment_content},#{comment_grp},#{comment_grps},#{comment_nb})
+	</insert>
+	
+	<select id="CommentList" resultType="com.DevFox.JUS.domain.CommentDTO">
+		SELECT * FROM comment ORDER BY comment_idx ,comment_grps
+	</select>
+	
+	<select id="COgrps" resultType="int">
+		select comment_grps from comment where comment_nb = #{nb}
+	</select>
+	
+	<update id="UPComment">
+		update comment set comment_grps = comment_grps +1 
+			where comment_idx = #{comment_idx} and comment_grps >= #{comment_grps}
+	</update>
+
+	<insert id="rereComment_insert">
+		insert into comment(comment_idx,user_name,board_idx,comment_grp,comment_grps,
+		comment_nb,comment_content)
+		value(#{comment_idx},#{user_name},#{board_idx},#{comment_grp},#{comment_grps},
+		#{comment_nb},#{comment_content})
+	</insert>
+	
+	<select id="GrpsMax" resultType="int">
+		select count(*) from comment where comment_idx = #{comment_idx};
+	</select>
+	
+	<update id="CommentDele">
+		update comment set comment_content = '삭제되었습니다' 
+			where comment_nb = #{comment_nb}
+	</update>
+	
+	<update id="CommentMode">
+		update comment set comment_content = #{comment_content}
+			where comment_nb = #{comment_nb}
+	</update>
+	
+	<select id="CommentPage" resultType="com.DevFox.JUS.domain.CommentDTO">
+		SELECT * FROM comment ORDER BY comment_idx, comment_grps
+		LIMIT #{statrPage}, 10;
+	</select>
+	
+	<select id="BoardmodifyList" resultType="com.DevFox.JUS.domain.BoardDTO">
+		select * from board where board_idx = #{board_idx}
+	</select>
+	
+	<update id="Boardmodif" >
+		update board set board_idx = #{board_idx}, board_content = #{board_content},
+		user_name = #{user_name},board_limit = #{board_limit},board_address = #{board_address},
+		board_days = #{board_days},board_end = #{board_end},board_period_start = #{board_period_start},
+		board_period_end = #{board_period_end},board_poto = #{board_poto},board_poto_new = #{board_poto_new},
+		board_title = #{board_title}
+		where board_idx = #{board_idx};
+	</update>
+	
+	<delete id="BoardDelete">
+		delete from board where board_idx =  #{board_idx};
+	</delete>
+</mapper>     
+                  
+                   

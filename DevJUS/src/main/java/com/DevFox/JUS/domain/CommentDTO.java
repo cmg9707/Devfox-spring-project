@@ -9,7 +9,7 @@ public class CommentDTO {
 	private int board_idx;//原本文順序
 	private int comment_grp;//コメント·グループ
 	private int comment_grps;//グループ内の順序
-	private int comment_grpl;//コメントorコメントの中のコメント
+	private int comment_nb;//コメントorコメントの中のコメント
 	private String comment_content;//コメントの内容
 	private String comment_date;//コメントの時間
 }

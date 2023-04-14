@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.DevFox.JUS.domain.BoardDTO;
+import com.DevFox.JUS.domain.CommentDTO;
 import com.DevFox.JUS.domain.RecommendDTO;
 import com.DevFox.JUS.domain.RequestDTO;
 import com.DevFox.JUS.domain.UserDTO;
@@ -68,8 +69,8 @@ public class JUSServiceimpl implements JUSService {
 	}
 	
 	@Override
-	public List<BoardDTO> boardList() {
-		return mapper.boardList();
+	public List<BoardDTO> boardList(int startPage) {
+		return mapper.boardList(startPage);
 	}
 	
 	@Override
@@ -123,5 +124,96 @@ public class JUSServiceimpl implements JUSService {
 	@Override
 	public int recommendOK(String board_idx, String recommend_user) {
 		return mapper.recommendOK(board_idx, recommend_user);
+	}
+	
+	@Override
+	public void reComment_insert(CommentDTO dto) {
+		mapper.reComment_insert(dto);
+	}
+	
+	@Override
+	public List<CommentDTO> CommentList() {
+		return mapper.CommentList();
+	}
+	
+	@Override
+	public int Comment_idxMax() {
+		return mapper.Comment_idxMax();
+	}
+	
+	@Override
+	public int COgrps(int nb) {
+		return mapper.COgrps(nb);
+	}
+	
+	@Override
+	public void UPComment(CommentDTO dto) {
+		mapper.UPComment(dto);
+	}
+	
+	@Override
+	public void rereComment_insert(CommentDTO dto) {
+		mapper.rereComment_insert(dto);
+	}
+	
+	@Override
+	public int GrpsMax(int comment_grp) {
+		return mapper.GrpsMax(comment_grp);
+	}
+	
+	@Override
+	public void CommentDele(String comment_nb) {
+		mapper.CommentDele(comment_nb);
+	}
+	
+	@Override
+	public void CommentMode(CommentDTO dto) {
+		mapper.CommentMode(dto);
+		
+	}
+	
+	@Override
+	public List<CommentDTO> CommentPage(int startPage) {
+		return mapper.CommentPage(startPage);
+	}
+	
+	@Override
+	public BoardDTO BoardmodifyList(int board_idx) {
+		return mapper.BoardmodifyList(board_idx);
+	}
+	
+	@Override
+	public void Boardmodif(BoardDTO dto) {	
+		mapper.Boardmodif(dto);
+	}
+	
+	@Override
+	public void BoardDelete(int board_idx) {
+		mapper.BoardDelete(board_idx);
+	}
+	
+	@Override
+	public int BoardUser_Count(String name) {
+		return mapper.BoardUser_Count(name);
+	}
+	
+	@Override
+	public List<BoardDTO> BoardUser_list(List<String> nameArr, List<String> dataArr, int startPage) {
+		return mapper.BoardUser_list(nameArr, dataArr, startPage);
+	}
+	
+	@Override
+	public List<BoardDTO> UPpageListCommend(int startPage) {
+		return mapper.UPpageListCommend(startPage);
+	}
+	
+	@Override
+	public void User_pass_ch(UserDTO dto) {
+		mapper.User_pass_ch(dto);
+	}
+	
+	@Override
+	public List<BoardDTO> infotextList(String user_name) {
+		return mapper.infotextList(user_name);
 	}
 }

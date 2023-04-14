@@ -1,0 +1,189 @@
+package com.DevFox.JUS.service;
+
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.DevFox.JUS.domain.BoardDTO;
+import com.DevFox.JUS.domain.CommentDTO;
+import com.DevFox.JUS.domain.RecommendDTO;
+import com.DevFox.JUS.domain.RequestDTO;
+import com.DevFox.JUS.domain.UserDTO;
+import com.DevFox.JUS.mapper.JUSMapper;
+
+import lombok.AllArgsConstructor;
+
+@Service
+@AllArgsConstructor
+public class JUSServiceimpl implements JUSService {
+	
+	private static final Logger log=
+			LoggerFactory.getLogger(JUSServiceimpl.class);
+	
+	@Autowired
+	private JUSMapper mapper; //mapper 依存性
+	
+	@Override
+		public int User_Count() {
+			return mapper.User_Count();
+		}
+	
+	@Override
+	public int Board_Count() {
+		return mapper.Board_Count();
+	}
+	
+	@Override
+	public int User_Chk(String username ,String user_value) {
+		
+		return mapper.User_Chk(username ,user_value);
+	}
+	
+	@Override
+	public void User_join(UserDTO dto) {
+		mapper.User_join(dto);
+	}
+	
+	@Override
+	public int User_login_id(String user_id) {
+		return mapper.User_login_id(user_id);
+	}
+	
+	@Override
+	public int User_login_idpass(String user_id, String user_pass) {
+		return mapper.User_login_idpass(user_id, user_pass);
+	}
+	
+	@Override
+	public UserDTO user_select(String user_id) {
+		return mapper.user_select(user_id);
+	}
+	
+	@Override
+	public void board_writing(BoardDTO dto) {
+		mapper.board_writing(dto);
+		
+	}
+	
+	@Override
+	public List<BoardDTO> boardList() {
+		return mapper.boardList();
+	}
+	
+	@Override
+	public BoardDTO viewDTO(String board_idx) {
+		return mapper.viewDTO(board_idx);
+	}
+	
+	@Override
+	public int request_orderMax(String board_idx) {
+		return mapper.request_orderMax(board_idx);
+	}
+	
+	@Override
+	public void board_request_update(int request_order, String board_idx) {
+		mapper.board_request_update(request_order, board_idx);
+		
+	}
+	
+	@Override
+	public void Requestinsert(RequestDTO dto) {
+		mapper.Requestinsert(dto);
+	}
+	
+	@Override
+	public int ViewRequestOK(String board_idx, String user_name) {
+		return mapper.ViewRequestOK(board_idx, user_name);
+	}
+	
+	@Override
+	public void RequestDe(String board_idx, String request_user) {
+		mapper.RequestDe(board_idx, request_user);
+		
+	}
+	
+	@Override
+	public int recommendMax(String board_idx) {
+		return mapper.recommendMax(board_idx);
+	}
+	
+	@Override
+	public void board_recommend_update(int recommend_order, String board_idx) {
+		mapper.board_recommend_update(recommend_order, board_idx);
+	}
+	
+	@Override
+	public void Recommendinsert(RecommendDTO dto) {
+		mapper.Recommendinsert(dto);
+		
+	}
+	
+	@Override
+	public int recommendOK(String board_idx, String recommend_user) {
+		return mapper.recommendOK(board_idx, recommend_user);
+	}
+	
+	@Override
+	public void reComment_insert(CommentDTO dto) {
+		mapper.reComment_insert(dto);
+	}
+	
+	@Override
+	public List<CommentDTO> CommentList() {
+		return mapper.CommentList();
+	}
+	
+	@Override
+	public int Comment_idxMax() {
+		return mapper.Comment_idxMax();
+	}
+	
+	@Override
+	public int COgrps(int nb) {
+		return mapper.COgrps(nb);
+	}
+	
+	@Override
+	public void UPComment(CommentDTO dto) {
+		mapper.UPComment(dto);
+	}
+	
+	@Override
+	public void rereComment_insert(CommentDTO dto) {
+		mapper.rereComment_insert(dto);
+	}
+	
+	@Override
+	public int GrpsMax(int comment_grp) {
+		return mapper.GrpsMax(comment_grp);
+	}
+	
+	@Override
+	public void CommentDele(String comment_nb) {
+		mapper.CommentDele(comment_nb);
+	}
+	
+	@Override
+	public void CommentMode(CommentDTO dto) {
+		mapper.CommentMode(dto);
+		
+	}
+	
+	@Override
+	public List<CommentDTO> CommentPage(int startPage) {
+		return mapper.CommentPage(startPage);
+	}
+	
+	@Override
+	public BoardDTO BoardmodifyList(int board_idx) {
+		return mapper.BoardmodifyList(board_idx);
+	}
+	
+	@Override
+	public void Boardmodif(BoardDTO dto) {	
+		mapper.Boardmodif(dto);
+	}
+}

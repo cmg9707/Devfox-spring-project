@@ -1,0 +1,136 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ include file="/Include/topmenu.jsp"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page import="model.*"%>
+
+<!DOCTYPE html>
+<html>
+<head>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
+	crossorigin="anonymous">
+<link rel="stylesheet"
+	//href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+	crossorigin="anonymous">
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+<style type="text/css">
+body {
+	min-height: 100vh;
+	background: #FACC2E;
+}
+
+.input-form {
+	max-width: 680px;
+	margin-top: 50px;
+	padding: 32px;
+	background: #fff;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	-webkit-box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.15);
+	-moz-box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.15);
+	box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.15)
+}
+</style>
+</head>
+<body>
+	<div class="container-sm">
+		<div class="input-form-backgroud row">
+			<div class="input-form col-md-12 mx-auto">
+				<h4 class="mb-3" style="text-align: center;">회원정보</h4>
+				<form class="member" name="member" action=""
+					method="post">
+
+					<table class="table table-striped table-hover">
+						<thead>
+						<tr>
+							<th scope="col" colspan="1">이름</th>
+							<th scope="col">정보</th>
+							<th scope="col">수정</th>
+						</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<th scope="row">성명</th>
+								<td>${member.name}</td>
+								<td>수정불가</td>
+							</tr>
+							<tr>
+								<th scope="row">유저 아이디</th>
+								<td>${member.userid}</td>
+								<td>수정불가</td>
+							</tr>
+							<tr>
+								<th scope="row">비밀번호</th>
+								<td colspan="">${member.pass}</td>
+								<td colspan=""><a href="javascript:repass()">수정가능</a></td>
+							</tr>
+							<tr>
+								<th scope="row">이메일</th>
+								<td>${member.email}</td>
+								<td>수정불가</td>
+							</tr>
+							<tr>
+								<th scope="row">전화번호</th>
+								<td>${member.phone}</td>
+								<td>수정불가</td>
+							</tr>
+							<tr>
+								<th scope="row">지역</th>
+								<c:if test="${member.area eq '0'}">
+								<td>선택안함</td>
+								</c:if>
+								<c:if test="${member.area ne '0'}">
+								<td>${member.area}</td>
+								</c:if>
+								<td colspan=""><a href="javascript:rearea()">수정가능</a></td>
+							</tr>
+							<tr>
+								<th scope="row">가입경로</th>
+								<c:if test="${member.root eq null}">
+								<td>선택안함</td>
+								</c:if>
+								<c:if test="${member.root ne null}">
+								<td>${member.root}</td>
+								</c:if>
+								<td colspan="">수정불가</td>
+							</tr>
+						</tbody>
+					</table>
+
+					<div class="container">
+						<div class="row">
+							<div class="col text-center">
+								<button type="button" class="btn btn-primary btn-lg"
+									onclick="location.href='index.jsp'">메인화면으로</button>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<script>
+		function repass(){
+			var url="repass.jsp";
+			open(url,"repasswindow", "statusbar=no, scrollbar=no, menubar=no, width=450, height=200" );
+			
+		}
+		function rearea(){
+			var url="rearea.jsp";
+			open(url,"reareawindow", "statusbar=no, scrollbar=no, menubar=no, width=450, height=200" );
+		}
+	</script>
+	<%@ include file="/Include/copyright.jsp"%>
+</body>
+</html>
